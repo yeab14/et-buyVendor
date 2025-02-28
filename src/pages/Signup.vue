@@ -23,7 +23,7 @@
             <!-- </div> -->
               <button type="submit" class="signup-btn">Sign Up</button>
             </form>
-            <p class="login-link">Already have an account? <router-link to="/login">Log in</router-link></p>
+            <p class="login-link">Already have an account? <router-link to="/vendor/login">Log in</router-link></p>
           </div>
         </div>
       </div>

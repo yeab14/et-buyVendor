@@ -15,32 +15,29 @@ import Signup from 'src/pages/Signup.vue'
 import Login from 'src/pages/Login.vue'
 
 const routes = [
-  // {
-  //   path: '/',
-  //   component: DashboardLayout,
-  //   // redirect: '/vendor/overview'
-  // },
-
+ 
   {
     path: '/',
+    redirect: '/vendor/signup',  
+  },
+  {
+    path: '/vendor/signup',
     component: Signup,
     name: 'Signup',
     meta: { requiresAuth: false }
   },
 
-
   {
-    path: '/login',
+    path: '/vendor/login',
     component: Login,
     name: 'Login',
     meta: { requiresAuth: false }
   },
   
-  
   {
     path: '/vendor',
     component: DashboardLayout,
-    redirect: '/vendor/overview',
+    redirect: '/vendor/signup',
     children: [
       {
         path: 'overview',
@@ -86,14 +83,5 @@ const routes = [
   },
   { path: '*', component: NotFound }
 ]
-
-/**
- * Asynchronously load view (Webpack Lazy loading compatible)
- * The specified component must be inside the Views folder
- * @param  {string} name  the filename (basename) of the view to load.
-function view(name) {
-   var res= require('../components/Dashboard/Views/' + name + '.vue');
-   return res;
-};**/
 
 export default routes
