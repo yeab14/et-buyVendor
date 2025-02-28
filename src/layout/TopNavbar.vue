@@ -1,62 +1,27 @@
 <template>
-  <nav class="navbar navbar-expand-lg">
+  <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Dashboard</a>
-      <button type="button"
-              class="navbar-toggler navbar-toggler-right"
-              :class="{toggled: $sidebar.showSidebar}"
-              aria-controls="navigation-index"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-              @click="toggleSidebar">
-        <span class="navbar-toggler-bar burger-lines"></span>
-        <span class="navbar-toggler-bar burger-lines"></span>
-        <span class="navbar-toggler-bar burger-lines"></span>
+      <a class="navbar-brand" href="#">Vendor Dashboard</a>
+      <button type="button" class="navbar-toggler" :class="{toggled: $sidebar.showSidebar}" @click="toggleSidebar">
+        <span class="navbar-toggler-bar"></span>
+        <span class="navbar-toggler-bar"></span>
+        <span class="navbar-toggler-bar"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-end">
-        <ul class="nav navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="dropdown">
-              <i class="nc-icon nc-palette"></i>
-            </a>
-          </li>
-          <base-dropdown tag="li">
-            <template slot="title">
-              <i class="nc-icon nc-planet"></i>
-              <b class="caret"></b>
-              <span class="notification">5</span>
-            </template>
-            <a class="dropdown-item" href="#">Notification 1</a>
-            <a class="dropdown-item" href="#">Notification 2</a>
-            <a class="dropdown-item" href="#">Notification 3</a>
-            <a class="dropdown-item" href="#">Notification 4</a>
-            <a class="dropdown-item" href="#">Another notification</a>
-          </base-dropdown>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nc-icon nc-zoom-split"></i>
-              <span class="d-lg-block">&nbsp;Search</span>
-            </a>
-          </li>
-        </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link" href="#">
-              Account
+              <i class="nc-icon nc-bell"></i> Notifications
             </a>
           </li>
-          <base-dropdown title="Dropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something</a>
-            <div class="divider"></div>
-            <a class="dropdown-item" href="#">Separated link</a>
-          </base-dropdown>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              Log out
+            <a class="nav-link" href="#">
+              <i class="nc-icon nc-user"></i> Account
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="nc-icon nc-button-power"></i> Log Out
             </a>
           </li>
         </ul>
@@ -64,39 +29,55 @@
     </div>
   </nav>
 </template>
+
 <script>
   export default {
-    computed: {
-      routeName () {
-        const {name} = this.$route
-        return this.capitalizeFirstLetter(name)
-      }
-    },
-    data () {
-      return {
-        activeNotifications: false
-      }
-    },
     methods: {
-      capitalizeFirstLetter (string) {
-        return string.charAt(0).toUpperCase() + string.slice(1)
-      },
-      toggleNotificationDropDown () {
-        this.activeNotifications = !this.activeNotifications
-      },
-      closeDropDown () {
-        this.activeNotifications = false
-      },
       toggleSidebar () {
         this.$sidebar.displaySidebar(!this.$sidebar.showSidebar)
-      },
-      hideSidebar () {
-        this.$sidebar.displaySidebar(false)
       }
     }
   }
-
 </script>
-<style>
 
+<style scoped>
+.navbar {
+  background-color: #ee5858;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.navbar-toggler {
+  border-color: white;
+}
+
+.navbar-toggler-bar {
+  background-color: white;
+  height: 3px;
+  margin: 5px 0;
+}
+
+.navbar-nav .nav-item .nav-link {
+  color: white;
+  font-size: 16px;
+  padding: 10px 15px;
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.navbar-nav .nav-item .nav-link i {
+  margin-right: 8px;
+}
 </style>

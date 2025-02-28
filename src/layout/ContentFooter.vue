@@ -1,26 +1,53 @@
 <template>
   <footer class="footer">
     <div class="container-fluid">
-      <nav>
-        <ul class="footer-menu">
-          <li>
-            <router-link :to="{path:'/admin'}">Dashboard</router-link>
-          </li>
-        </ul>
-      </nav>
-      <div class="copyright text-center">
-        &copy; Coded with
-        <i class="fa fa-heart heart"></i> by
-        <a href="https://binarcode.com" target="_blank">BinarCode</a>.
-        Designed by <a href="https://www.creative-tim.com/?ref=pdf-vuejs" target="_blank">Creative Tim</a>.
+      <div class="footer-content">
+        <span>&copy; {{ currentYear }} Cedora Technology (Hong Kong) Limited. All rights reserved.</span>
       </div>
     </div>
   </footer>
 </template>
+
 <script>
-  export default {}
-
+export default {
+  data() {
+    return {
+      currentYear: new Date().getFullYear(),
+    };
+  },
+};
 </script>
-<style>
 
+<style scoped>
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 20vh;
+  width: 100%;
+  background-color: #ee5858;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.footer-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+.footer-content span {
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.footer-content span:hover {
+  text-decoration: underline;
+  font-weight: 600;
+}
 </style>

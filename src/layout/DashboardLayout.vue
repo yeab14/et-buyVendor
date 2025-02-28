@@ -6,7 +6,7 @@
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Dashboard</p>
       </sidebar-link>
-      <sidebar-link to="/admin/user">
+      <sidebar-link to="/admin/ProductManagement">
         <i class="fa fa-shopping-bag"></i>
         <p>Product Management</p>
       </sidebar-link>
@@ -15,7 +15,7 @@
         <i class="nc-icon nc-delivery-fast"></i>
         <p>Order Management</p>
       </sidebar-link>
-      <sidebar-link to="/admin/typography">
+      <sidebar-link to="/admin/ProductManagement">
         <i class="nc-icon nc-money-coins"></i>
         <p>Financials</p>
       </sidebar-link>

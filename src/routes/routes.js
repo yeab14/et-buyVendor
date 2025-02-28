@@ -6,7 +6,7 @@ import NotFound from '../pages/NotFoundPage.vue'
 import Overview from 'src/pages/Overview.vue'
 import UserProfile from 'src/pages/UserProfile.vue'
 import TableList from 'src/pages/TableList.vue'
-import Typography from 'src/pages/Typography.vue'
+import ProductManagement from 'src/pages/ProductManagement.vue'
 import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
 import Notifications from 'src/pages/Notifications.vue'
@@ -39,9 +39,9 @@ const routes = [
         component: TableList
       },
       {
-        path: 'typography',
-        name: 'Typography',
-        component: Typography
+        path: 'ProductManagement',
+        name: 'ProductManagement',
+        component: ProductManagement
       },
       {
         path: 'icons',

@@ -49,12 +49,10 @@
             </li>
           </ul>
         </nav>
-        <div class="copyright text-center">
-          &copy; Coded with
-          <i class="fa fa-heart heart"></i> by
-          <a href="https://binarcode.com" target="_blank">BinarCode</a>.
-          Designed by <a href="https://www.creative-tim.com/?ref=pdf-vuejs" target="_blank">Creative Tim</a>.
+        <div>
+          Copyright © 2025 Cedora Technology (Hong Kong) Limited. All rights reserved.
         </div>
+        
       </div>
     </footer>
   </div>
