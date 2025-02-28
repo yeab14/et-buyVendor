@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Vendor Dashboard</a>
+      <a class="navbar-brand" href="#">ET-Buy Vendor Dashboard</a>
       <button type="button" class="navbar-toggler" :class="{toggled: $sidebar.showSidebar}" @click="toggleSidebar">
         <span class="navbar-toggler-bar"></span>
         <span class="navbar-toggler-bar"></span>

@@ -2,7 +2,7 @@ import DashboardLayout from '../layout/DashboardLayout.vue'
 // GeneralViews
 import NotFound from '../pages/NotFoundPage.vue'
 
-// Admin pages
+// vendor pages
 import Overview from 'src/pages/Overview.vue'
 import UserProfile from 'src/pages/UserProfile.vue'
 import TableList from 'src/pages/TableList.vue'
@@ -11,17 +11,36 @@ import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
 import Notifications from 'src/pages/Notifications.vue'
 import Upgrade from 'src/pages/Upgrade.vue'
+import Signup from 'src/pages/Signup.vue'
+import Login from 'src/pages/Login.vue'
 
 const routes = [
+  // {
+  //   path: '/',
+  //   component: DashboardLayout,
+  //   // redirect: '/vendor/overview'
+  // },
+
   {
     path: '/',
-    component: DashboardLayout,
-    redirect: '/admin/overview'
+    component: Signup,
+    name: 'Signup',
+    meta: { requiresAuth: false }
   },
+
+
   {
-    path: '/admin',
+    path: '/login',
+    component: Login,
+    name: 'Login',
+    meta: { requiresAuth: false }
+  },
+  
+  
+  {
+    path: '/vendor',
     component: DashboardLayout,
-    redirect: '/admin/overview',
+    redirect: '/vendor/overview',
     children: [
       {
         path: 'overview',
