@@ -15,14 +15,15 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link class="nav-link" to="/vendor/user">
               <i class="nc-icon nc-user"></i> Account
-            </a>
+            </router-link>
           </li>
+          
           <li class="nav-item">
-            <a class="nav-link" href="#">
+           <router-link class="nav-link" to="/vendor/login">
               <i class="nc-icon nc-button-power"></i> Log Out
-            </a>
+           </router-link>
           </li>
         </ul>
       </div>

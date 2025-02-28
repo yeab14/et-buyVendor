@@ -15,7 +15,7 @@
               <input type="password" v-model="vendor.password" placeholder="Password" required />
               <button type="submit" class="login-btn">Login</button>
             </form>
-            <p class="signup-link">Don't have an account? <router-link to="/signup">Sign up</router-link></p>
+            <p class="signup-link">Don't have an account? <router-link to="/vendor/signup">Sign up</router-link></p>
           </div>
         </div>
       </div>

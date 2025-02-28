@@ -8,8 +8,9 @@ import UserProfile from 'src/pages/UserProfile.vue'
 import OrderManagement from 'src/pages/OrderManagement.vue'
 import ProductManagement from 'src/pages/ProductManagement.vue'
 import Icons from 'src/pages/Icons.vue'
-import Maps from 'src/pages/Maps.vue'
-import Notifications from 'src/pages/Notifications.vue'
+import CustomerInteraction from 'src/pages/CustomerInteraction.vue'
+import StoreSetting  from 'src/pages/StoreSetting.vue'
+import FAQ from 'src/pages/FAQ.vue'
 import Financial from 'src/pages/Financial.vue'
 import Signup from 'src/pages/Signup.vue'
 import Login from 'src/pages/Login.vue'
@@ -50,8 +51,8 @@ const routes = [
         component: UserProfile
       },
       {
-        path: 'table-list',
-        name: 'Table List',
+        path: 'OrderManagement',
+        name: 'OrderManagement',
         component: OrderManagement
       },
       {
@@ -65,19 +66,24 @@ const routes = [
         component: Icons
       },
       {
-        path: 'maps',
-        name: 'Maps',
-        component: Maps
+        path: 'CustomerInteraction',
+        name: 'CustomerInteraction',
+        component: CustomerInteraction
       },
       {
-        path: 'notifications',
-        name: 'Notifications',
-        component: Notifications
+        path: 'FAQ',
+        name: 'FAQ',
+        component: FAQ
       },
       {
         path: 'Financial',
         name: 'Financial ',
         component: Financial
+      },
+      {
+        path: 'StoreSetting',
+        name: 'StoreSetting',
+        component: StoreSetting 
       }
     ]
   },

@@ -11,7 +11,7 @@
         <p>Product Management</p>
       </sidebar-link>
       
-      <sidebar-link to="/vendor/table-list">
+      <sidebar-link to="/vendor/OrderManagement">
         <i class="nc-icon nc-delivery-fast"></i>
         <p>Order Management</p>
       </sidebar-link>
@@ -19,25 +19,25 @@
         <i class="nc-icon nc-money-coins"></i>
         <p>Financials</p>
       </sidebar-link>
-      <sidebar-link to="/vendor/icons">
+      <sidebar-link to="/vendor/CustomerInteraction">
         <i class="nc-icon nc-single-02"></i>
         <p>Customer Interaction</p>
       </sidebar-link>
-      <sidebar-link to="/vendor/maps">
+      <sidebar-link to="/vendor/StoreSetting ">
         <i class="nc-icon nc-settings-gear-64"></i>
         <p>Store Settings</p>
       </sidebar-link>
-      <sidebar-link to="/vendor/notifications">
+      <!-- <sidebar-link to="/vendor/notifications">
         <i class="nc-icon nc-chart-bar-32"></i>
         <p>Analytics & Reports</p>
-      </sidebar-link>
-      <sidebar-link to="/vendor/notifications">
+      </sidebar-link> -->
+      <sidebar-link to="/vendor/FAQ">
         <i class="nc-icon nc-support-17"></i>
         <p>Support & Help</p>
       </sidebar-link>
       
       <template slot="bottom-links">
-        <sidebar-link class="active" to="/vendor/logout">
+        <sidebar-link class="active" to="/vendor/login">
           <i class="nc-icon nc-button-power"></i>
           <p>Logout</p>
         </sidebar-link>
