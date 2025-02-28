@@ -7,35 +7,39 @@
         <p>Dashboard</p>
       </sidebar-link>
       <sidebar-link to="/admin/user">
-        <i class="nc-icon nc-circle-09"></i>
-        <p>User Profile</p>
+        <i class="fa fa-shopping-bag"></i>
+        <p>Product Management</p>
       </sidebar-link>
+      
       <sidebar-link to="/admin/table-list">
-        <i class="nc-icon nc-notes"></i>
-        <p>Table list</p>
+        <i class="nc-icon nc-delivery-fast"></i>
+        <p>Order Management</p>
       </sidebar-link>
       <sidebar-link to="/admin/typography">
-        <i class="nc-icon nc-paper-2"></i>
-        <p>Typography</p>
+        <i class="nc-icon nc-money-coins"></i>
+        <p>Financials</p>
       </sidebar-link>
       <sidebar-link to="/admin/icons">
-        <i class="nc-icon nc-atom"></i>
-        <p>Icons</p>
+        <i class="nc-icon nc-single-02"></i>
+        <p>Customer Interaction</p>
       </sidebar-link>
       <sidebar-link to="/admin/maps">
-        <i class="nc-icon nc-pin-3"></i>
-        <p>Maps</p>
+        <i class="nc-icon nc-settings-gear-64"></i>
+        <p>Store Settings</p>
       </sidebar-link>
       <sidebar-link to="/admin/notifications">
-        <i class="nc-icon nc-bell-55"></i>
-        <p>Notifications</p>
+        <i class="nc-icon nc-chart-bar-32"></i>
+        <p>Analytics & Reports</p>
       </sidebar-link>
-
+      <sidebar-link to="/admin/notifications">
+        <i class="nc-icon nc-support-17"></i>
+        <p>Support & Help</p>
+      </sidebar-link>
+      
       <template slot="bottom-links">
-        <sidebar-link class="active"
-                      to="/admin/upgrade">
-          <i class="nc-icon nc-alien-33"></i>
-          <p>Upgrade to PRO</p>
+        <sidebar-link class="active" to="/vendor/logout">
+          <i class="nc-icon nc-button-power"></i>
+          <p>Logout</p>
         </sidebar-link>
       </template>
     </side-bar>
@@ -43,13 +47,14 @@
       <top-navbar></top-navbar>
 
       <dashboard-content @click="toggleSidebar">
-
       </dashboard-content>
 
       <content-footer></content-footer>
     </div>
   </div>
 </template>
+
+
 <style lang="scss">
 
 </style>
