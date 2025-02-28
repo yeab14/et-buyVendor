@@ -5,12 +5,12 @@ import NotFound from '../pages/NotFoundPage.vue'
 // vendor pages
 import Overview from 'src/pages/Overview.vue'
 import UserProfile from 'src/pages/UserProfile.vue'
-import TableList from 'src/pages/TableList.vue'
+import OrderManagement from 'src/pages/OrderManagement.vue'
 import ProductManagement from 'src/pages/ProductManagement.vue'
 import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
 import Notifications from 'src/pages/Notifications.vue'
-import Upgrade from 'src/pages/Upgrade.vue'
+import Financial from 'src/pages/Financial.vue'
 import Signup from 'src/pages/Signup.vue'
 import Login from 'src/pages/Login.vue'
 
@@ -52,7 +52,7 @@ const routes = [
       {
         path: 'table-list',
         name: 'Table List',
-        component: TableList
+        component: OrderManagement
       },
       {
         path: 'ProductManagement',
@@ -75,9 +75,9 @@ const routes = [
         component: Notifications
       },
       {
-        path: 'upgrade',
-        name: 'Upgrade to PRO',
-        component: Upgrade
+        path: 'Financial',
+        name: 'Financial ',
+        component: Financial
       }
     ]
   },

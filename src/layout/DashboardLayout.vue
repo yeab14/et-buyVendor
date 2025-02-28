@@ -15,7 +15,7 @@
         <i class="nc-icon nc-delivery-fast"></i>
         <p>Order Management</p>
       </sidebar-link>
-      <sidebar-link to="/vendor/ProductManagement">
+      <sidebar-link to="/vendor/Financial">
         <i class="nc-icon nc-money-coins"></i>
         <p>Financials</p>
       </sidebar-link>

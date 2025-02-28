@@ -204,21 +204,22 @@
     max-height: 300px;
     overflow-y: auto;
   }
-
+  
   .table thead, .table tbody tr {
     display: table;
     width: 100%;
     table-layout: fixed;
   }
-
+  
   .table th, .table td {
     width: 14%;
+    text-align: left; 
   }
-
+  
   .table tbody tr td {
     padding: 5px 10px;
   }
-
+  
   .btn-action {
     font-size: 12px;
     padding: 6px 12px;
