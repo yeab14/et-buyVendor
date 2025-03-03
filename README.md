@@ -13,9 +13,5 @@ Start the development server with npm run dev.
 Build for Production
 Run npm run build to create a production build.
 
-Contributing
-Install dependencies with npm install.
-Please avoid using jQuery or jQuery-based plugins, as we use pure Vue alternatives.
-License
-This project is licensed under the MIT License.
+
 
