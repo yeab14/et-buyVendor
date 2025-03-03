@@ -12,8 +12,8 @@ import CustomerInteraction from 'src/pages/CustomerInteraction.vue'
 import StoreSetting  from 'src/pages/StoreSetting.vue'
 import FAQ from 'src/pages/FAQ.vue'
 import Financial from 'src/pages/Financial.vue'
-import Signup from 'src/pages/Signup.vue'
-import Login from 'src/pages/Login.vue'
+import Signup from 'src/pages/Authentication/Signup.vue'
+import Login from 'src/pages/Authentication/Login.vue'
 
 const routes = [
  
