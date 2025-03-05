@@ -141,18 +141,31 @@ export default {
         .required("Confirm Password is required"),
     });
 
-    // Validate the form
+ 
     await validationSchema.validate(this.vendor, { abortEarly: false });
-    this.errors = {}; // Clear existing errors
+    this.errors = {}; 
 
     const response = await registerVendor(this.vendor);
 
-    if (response) { // Assuming registerVendor returns true or data on success
-      console.log('Redirecting to /vendor/overview');
-      this.$router.push("/vendor/overview");
+    if (response) { 
+ 
+      this.$bvToast.toast('You have successfully signed up!', {
+        title: 'Success!',
+        variant: 'success',
+        solid: true,
+      });
+
+
+      setTimeout(() => {
+        this.$router.push("/vendor/overview");
+      }, 2000); 
     } else {
-      console.log('Failed to redirect');
-      this.errors.api = "Something went wrong, please try again.";
+      
+      this.$bvToast.toast('Something went wrong, please try again.', {
+        title: 'Error!',
+        variant: 'danger',
+        solid: true,
+      });
     }
 
   } catch (err) {
@@ -165,10 +178,18 @@ export default {
         return acc;
       }, {});
     }
+
+ 
+    this.$bvToast.toast('Please correct the errors and try again.', {
+      title: 'Error!',
+      variant: 'danger',
+      solid: true,
+    });
   } finally {
     this.loading = false;
   }
-},
+}
+,
 
     togglePassword(field) {
       if (field === "password") {

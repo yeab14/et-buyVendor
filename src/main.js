@@ -5,11 +5,15 @@ import LightBootstrap from "./light-bootstrap-main";
 import routes from "./routes/routes";
 
 
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+import BootstrapVue, { BToast } from "bootstrap-vue";
+
 import "./registerServiceWorker";
 
 Vue.use(VueRouter);
 Vue.use(LightBootstrap);
-
+Vue.use(BootstrapVue); 
 
 const router = new VueRouter({
   routes,
