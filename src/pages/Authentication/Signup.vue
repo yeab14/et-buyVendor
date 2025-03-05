@@ -13,9 +13,9 @@
           <form @submit.prevent="handleSubmit">
             <div
               class="input-group"
-              :class="{ 'has-error': errors[field.name] }"
               v-for="field in fields"
               :key="field.name"
+              :class="{ 'has-error': errors[field.name] }"
             >
               <input
                 v-if="field.name !== 'password' && field.name !== 'confirmPassword'"
@@ -23,19 +23,16 @@
                 :type="field.type"
                 :placeholder="field.placeholder"
               />
+
               <div v-if="field.name === 'password'">
-                <div class="password-header">
-                  <label class="input-label">Password</label>
-                </div>
                 <div class="password-input-wrapper">
                   <input
                     :type="showPassword ? 'text' : 'password'"
-                    class="input-field"
                     v-model="vendor.password"
                     placeholder="Password"
                   />
                   <img
-                    :src="require('@/assets/icons/EyeOpen.jpg')"
+                    src="@/assets/icons/EyeOpen.jpg"
                     alt="Show Password"
                     class="eye-icon"
                     @click="togglePassword('password')"
@@ -43,19 +40,16 @@
                 </div>
                 <span v-if="errors.password" class="error">{{ errors.password }}</span>
               </div>
+
               <div v-if="field.name === 'confirmPassword'">
-                <div class="password-header">
-                  <label class="input-label">Confirm Password</label>
-                </div>
                 <div class="password-input-wrapper">
                   <input
                     :type="showConfirmPassword ? 'text' : 'password'"
-                    class="input-field"
                     v-model="vendor.confirmPassword"
                     placeholder="Confirm Password"
                   />
                   <img
-                    :src="require('@/assets/icons/EyeOpen.jpg')"
+                    src="@/assets/icons/EyeOpen.jpg"
                     alt="Show Password"
                     class="eye-icon"
                     @click="togglePassword('confirmPassword')"
@@ -63,13 +57,13 @@
                 </div>
                 <span v-if="errors.confirmPassword" class="error">{{ errors.confirmPassword }}</span>
               </div>
-              <span
-                v-if="field.name !== 'password' && field.name !== 'confirmPassword' && errors[field.name]"
-                class="error"
-                >{{ errors[field.name] }}</span
-              >
+
+              <span v-if="errors[field.name]" class="error">{{ errors[field.name] }}</span>
             </div>
-            <button type="submit" class="signup-btn">Sign Up</button>
+
+            <button type="submit" class="signup-btn" :disabled="loading">
+              {{ loading ? "Signing Up..." : "Sign Up" }}
+            </button>
           </form>
           <p class="login-link">
             Already have an account? <router-link to="/vendor/login">Log in</router-link>
@@ -81,100 +75,113 @@
 </template>
 
 <script>
-import { reactive, ref } from "vue";
 import * as yup from "yup";
+import { registerVendor } from "@/api/auth";
 
 export default {
-  setup() {
-    const vendor = reactive({
-      firstName: "",
-      lastName: "",
-      businessName: "",
-      email: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
-    });
+  data() {
+    return {
+      vendor: {
+        firstName: "",
+        lastName: "",
+        businessName: "",
+        phoneNumber: "",
+        password: "",
+        confirmPassword: "",
+      },
+      errors: {},
+      showPassword: false,
+      showConfirmPassword: false,
+      fields: [
+        { name: "firstName", type: "text", placeholder: "First Name" },
+        { name: "lastName", type: "text", placeholder: "Last Name" },
+        { name: "businessName", type: "text", placeholder: "Business Name" },
+        { name: "phoneNumber", type: "tel", placeholder: "Phone Number" },
+        { name: "password", type: "password", placeholder: "Password" },
+        { name: "confirmPassword", type: "password", placeholder: "Confirm Password" },
+      ],
+      loading: false,
+    };
+  },
+  methods: {
+    async handleSubmit() {
+  this.loading = true;
 
-    const errors = ref({});
-
-    const showPassword = ref(false);
-    const showConfirmPassword = ref(false);
-
-    // Strong validation schema
+  try {
     const validationSchema = yup.object({
       firstName: yup
         .string()
         .required("First Name is required")
-        .min(2, "First Name must be at least 2 characters")
-        .matches(/^[a-zA-Z ]*$/, "First Name can only contain letters and spaces"),
+        .min(2, "At least 2 characters")
+        .matches(/^[a-zA-Z ]*$/, "Only letters and spaces"),
       lastName: yup
         .string()
         .required("Last Name is required")
-        .min(2, "Last Name must be at least 2 characters")
-        .matches(/^[a-zA-Z ]*$/, "Last Name can only contain letters and spaces"),
+        .min(2, "At least 2 characters")
+        .matches(/^[a-zA-Z ]*$/, "Only letters and spaces"),
       businessName: yup
         .string()
         .required("Business Name is required")
-        .min(2, "Business Name must be at least 2 characters"),
-      email: yup
-        .string()
-        .email("Invalid email format")
-        .required("Email is required"),
-      phone: yup
+        .min(2, "At least 2 characters"),
+      phoneNumber: yup
         .string()
         .required("Phone number is required")
-        .matches(/^[0-9]{10,15}$/, "Phone number must be between 10-15 digits"),
+        .matches(/^[0-9]{10,15}$/, "Phone must be 10-15 digits"),
       password: yup
         .string()
         .required("Password is required")
-        .min(8, "Password must be at least 8 characters")
-        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-        .matches(/[0-9]/, "Password must contain at least one number")
-        .matches(/[\W_]/, "Password must contain at least one special character"),
+        .min(8, "Must be at least 8 characters")
+        .matches(/[A-Z]/, "Must contain one uppercase letter")
+        .matches(/[a-z]/, "Must contain one lowercase letter")
+        .matches(/[0-9]/, "Must contain one number")
+        .matches(/[\W_]/, "Must contain one special character"),
       confirmPassword: yup
         .string()
         .oneOf([yup.ref("password"), null], "Passwords must match")
         .required("Confirm Password is required"),
     });
 
-    const handleSubmit = async () => {
-      try {
-        await validationSchema.validate(vendor, { abortEarly: false });
-        errors.value = {}; // Clear previous errors
-        console.log("Vendor Registered:", vendor);
-      } catch (err) {
-        // Handle validation errors
-        errors.value = err.inner.reduce((acc, curr) => {
-          acc[curr.path] = curr.message;
-          return acc;
-        }, {});
-      }
-    };
+    // Validate the form
+    await validationSchema.validate(this.vendor, { abortEarly: false });
+    this.errors = {}; // Clear existing errors
 
-    const fields = [
-      { name: "firstName", type: "text", placeholder: "First Name" },
-      { name: "lastName", type: "text", placeholder: "Last Name" },
-      { name: "businessName", type: "text", placeholder: "Business Name" },
-      { name: "email", type: "email", placeholder: "Email" },
-      { name: "phone", type: "tel", placeholder: "Phone Number" },
-      { name: "password", type: "password", placeholder: "Password" },
-      { name: "confirmPassword", type: "password", placeholder: "Confirm Password" },
-    ];
+    const response = await registerVendor(this.vendor);
 
-    const togglePassword = (field) => {
+    if (response) { // Assuming registerVendor returns true or data on success
+      console.log('Redirecting to /vendor/overview');
+      this.$router.push("/vendor/overview");
+    } else {
+      console.log('Failed to redirect');
+      this.errors.api = "Something went wrong, please try again.";
+    }
+
+  } catch (err) {
+    console.error("Validation or API Error:", err);
+    this.loading = false;
+
+    if (err.inner) {
+      this.errors = err.inner.reduce((acc, curr) => {
+        acc[curr.path] = curr.message;
+        return acc;
+      }, {});
+    }
+  } finally {
+    this.loading = false;
+  }
+},
+
+    togglePassword(field) {
       if (field === "password") {
-        showPassword.value = !showPassword.value;
+        this.showPassword = !this.showPassword;
       } else if (field === "confirmPassword") {
-        showConfirmPassword.value = !showConfirmPassword.value;
+        this.showConfirmPassword = !this.showConfirmPassword;
       }
-    };
-
-    return { vendor, errors, handleSubmit, fields, togglePassword, showPassword, showConfirmPassword };
+    },
   },
 };
 </script>
+
+
 
 
 <style scoped>
@@ -283,13 +290,25 @@ input:focus {
   box-shadow: 0 0 5px rgba(238, 88, 88, 0.5);
 }
 
-.password-input-wrapper {
-  position: relative;
-}
-
 .input-field {
   width: 100%;
   padding-right: 30vh;
+}
+
+input[type="password"], input[type="text"] {
+  width: 180%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: 0.3s ease-in-out;
+}
+
+input[type="password"]:focus, input[type="text"]:focus {
+  border-color: #ee5858;
+  outline: none;
+  box-shadow: 0 0 5px rgba(238, 88, 88, 0.5);
 }
 
 .signup-btn {
