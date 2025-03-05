@@ -66,8 +66,10 @@
             </button>
           </form>
           <p class="login-link">
-            Already have an account? <router-link to="/vendor/login">Log in</router-link>
+            Already a vendor? <router-link to="/vendor/login"><strong>Sign in</strong></router-link> to manage your store and track your sales.
           </p>
+          
+          
         </div>
       </div>
     </div>
@@ -146,20 +148,18 @@ export default {
     this.errors = {}; 
 
     const response = await registerVendor(this.vendor);
-
     if (response) { 
- 
-      this.$bvToast.toast('You have successfully signed up!', {
-        title: 'Success!',
-        variant: 'success',
-        solid: true,
-      });
+  this.$bvToast.toast('🎉 Welcome aboard! Your vendor account has been successfully created. 🚀 Get ready to grow your business with EtBuy! You’ll be redirected shortly...', {
+    title: '🎊 Success! 🎊',
+    variant: 'success',
+    solid: true,
+   
+  });
 
-
-      setTimeout(() => {
-        this.$router.push("/vendor/overview");
-      }, 2000); 
-    } else {
+  setTimeout(() => {
+    this.$router.push("/vendor/overview");
+  }, 5000);
+}else {
       
       this.$bvToast.toast('Something went wrong, please try again.', {
         title: 'Error!',
@@ -317,7 +317,7 @@ input:focus {
 }
 
 input[type="password"], input[type="text"] {
-  width: 180%;
+  width: 195%;
   padding: 12px;
   margin: 8px 0;
   border: 1px solid #ddd;
