@@ -100,9 +100,9 @@
   }
   
   h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
     text-align: center;
     color: #fff;
     letter-spacing: 1px;

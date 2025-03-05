@@ -29,8 +29,9 @@
 <div class="col-xl-3 col-md-6">
   <stats-card :brand-color="brandColor">
     <div slot="header" class="icon-info">
-      <i class="fa fa-shopping-bag"></i>
+      <i class="fa fa-box"></i>
     </div>
+    
     <div slot="content">
       <p class="card-category">Total Products</p>
       <h4 class="card-title">{{ totalProducts }}</h4>
@@ -40,6 +41,7 @@
     </div>
   </stats-card>
 </div>
+
 
         <div class="col-xl-3 col-md-6">
           <stats-card :brand-color="brandColor">
@@ -60,9 +62,11 @@
 <!-- Customer Rating -->
 <div class="col-xl-3 col-md-6">
   <stats-card :brand-color="brandColor">
-    <div slot="header" class="icon-danger">
-      <i class="nc-icon nc-hat-3 text-danger"></i> <!-- Use nc-hat-3 for rating icon -->
-    </div>
+<!-- Customer Rating -->
+<div slot="header" class="icon-danger">
+  <i class="fa fa-star text-danger"></i>  
+</div>
+
     <div slot="content">
       <p class="card-category">Customer Rating</p>
       <h4 class="card-title">{{ customerRating }}/5</h4>

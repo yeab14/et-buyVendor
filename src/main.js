@@ -3,11 +3,10 @@ import VueRouter from "vue-router";
 import App from "./App.vue";
 import LightBootstrap from "./light-bootstrap-main";
 import routes from "./routes/routes";
-
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import BootstrapVue, { BToast } from "bootstrap-vue";
+import '@fortawesome/fontawesome-free/css/all.css';
 
 import "./registerServiceWorker";
 
