@@ -40,7 +40,7 @@
 
 <script>
 import { ref } from 'vue';
-import Card from 'src/components/Cards/Card.vue';
+import Card from '@/components/Cards/Card.vue';
 import ProductList from './ProductList.vue';
 import ProductForm from './ProductForm.vue';
 

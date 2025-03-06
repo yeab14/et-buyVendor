@@ -17,11 +17,13 @@
               :key="field.name"
               :class="{ 'has-error': errors[field.name] }"
             >
+              <label :for="field.name" class="input-label">{{ field.placeholder }}</label>
+              
               <input
                 v-if="field.name !== 'password' && field.name !== 'confirmPassword'"
                 v-model="vendor[field.name]"
                 :type="field.type"
-                :placeholder="field.placeholder"
+                :id="field.name"
               />
 
               <div v-if="field.name === 'password'">
@@ -29,16 +31,17 @@
                   <input
                     :type="showPassword ? 'text' : 'password'"
                     v-model="vendor.password"
-                    placeholder="Password"
+                    id="password"
+                    class="password-field"
                   />
                   <img
-                    src="@/assets/icons/EyeOpen.jpg"
+                    src="img/EyeOpen.jpg"
                     alt="Show Password"
                     class="eye-icon"
                     @click="togglePassword('password')"
                   />
                 </div>
-                <span v-if="errors.password" class="error">{{ errors.password }}</span>
+                <!-- <span v-if="errors.password" class="error">{{ errors.password }}</span> -->
               </div>
 
               <div v-if="field.name === 'confirmPassword'">
@@ -46,16 +49,17 @@
                   <input
                     :type="showConfirmPassword ? 'text' : 'password'"
                     v-model="vendor.confirmPassword"
-                    placeholder="Confirm Password"
+                    id="confirmPassword"
+                    class="password-field"
                   />
                   <img
-                    src="@/assets/icons/EyeOpen.jpg"
+                    src="img/EyeOpen.jpg"
                     alt="Show Password"
                     class="eye-icon"
                     @click="togglePassword('confirmPassword')"
                   />
                 </div>
-                <span v-if="errors.confirmPassword" class="error">{{ errors.confirmPassword }}</span>
+                <!-- <span v-if="errors.confirmPassword" class="error">{{ errors.confirmPassword }}</span> -->
               </div>
 
               <span v-if="errors[field.name]" class="error">{{ errors[field.name] }}</span>
@@ -68,8 +72,6 @@
           <p class="login-link">
             Already a vendor? <router-link to="/vendor/login"><strong>Sign in</strong></router-link> to manage your store and track your sales.
           </p>
-          
-          
         </div>
       </div>
     </div>
@@ -229,14 +231,13 @@ export default {
   margin-bottom: 10px;
 }
 
-.input-group.has-error {
-
-}
+.input-group.has-error {}
 
 .error {
   color: red;
   font-size: 12px;
 }
+
 .left-section {
   width: 40%;
   background: linear-gradient(135deg, #ee5858, #000);
@@ -276,7 +277,6 @@ h2 {
   margin-bottom: 20px;
 }
 
-
 h3 {
   font-size: 22px;
   font-weight: bold;
@@ -287,7 +287,7 @@ h3 {
 
 .input-group {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
 }
 
 input {
@@ -304,7 +304,6 @@ input + input {
   margin-top: 8px;
 }
 
-
 input:focus {
   border-color: #ee5858;
   outline: none;
@@ -317,7 +316,7 @@ input:focus {
 }
 
 input[type="password"], input[type="text"] {
-  width: 195%;
+  width: 100%;
   padding: 12px;
   margin: 8px 0;
   border: 1px solid #ddd;
@@ -373,5 +372,17 @@ input[type="password"]:focus, input[type="text"]:focus {
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
+}
+
+.input-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.password-input-wrapper {
+  position: relative;
 }
 </style>

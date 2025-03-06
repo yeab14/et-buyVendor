@@ -179,9 +179,9 @@
 </template>
 
 <script>
-import ChartCard from 'src/components/Cards/ChartCard.vue';
-import StatsCard from 'src/components/Cards/StatsCard.vue';
-import LTable from 'src/components/Table.vue';
+import ChartCard from '@/components/Cards/ChartCard.vue';
+import StatsCard from '@/components/Cards/StatsCard.vue';
+import LTable from '@/components/Table.vue';
 
 export default {
   components: {
