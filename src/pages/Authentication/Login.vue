@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import { loginVendor } from "@/api/auth";
+
 export default {
   data() {
     return {
@@ -74,50 +76,60 @@ export default {
       errors: {},
       showPassword: false,
       loading: false,
-      dummyPhoneNumber: "1234567890", // Dummy phone number for testing
-      dummyPassword: "password123", // Dummy password for testing
     };
   },
   methods: {
-    login() {
-      this.errors = {}; // Reset errors
+    async login() {
+      this.errors = {};
       if (!this.vendor.phoneNumber || !this.vendor.password) {
         this.errors = {
-          phoneNumber: "Phone number is required",
-          password: "Password is required",
+          phoneNumber: !this.vendor.phoneNumber ? "Phone number is required" : "",
+          password: !this.vendor.password ? "Password is required" : "",
         };
         return;
       }
 
-      // Validate phone number format
       const phonePattern = /^[0-9]{10}$/;
       if (!phonePattern.test(this.vendor.phoneNumber)) {
         this.errors.phoneNumber = "Invalid phone number format";
         return;
       }
 
-      // Dummy data validation
-      if (
-        this.vendor.phoneNumber === this.dummyPhoneNumber &&
-        this.vendor.password === this.dummyPassword
-      ) {
-        // Simulate successful login and navigate
-        console.log("Login successful");
-        this.$router.push("/vendor/overview");
-      } else {
-        this.errors = {
-          phoneNumber: "Incorrect phone number or password",
-        };
+      try {
+        this.loading = true;
+        const response = await loginVendor({
+          phoneNumber: this.vendor.phoneNumber,
+          password: this.vendor.password,
+        });
+
+        this.$bvToast.toast(
+          '✅ Welcome back! You have successfully logged in to your EtBuy vendor account. 🚀 Time to manage your business and boost your sales! Redirecting you to your dashboard...',
+          {
+            title: '🎉 Login Successful!',
+            variant: 'success',
+            solid: true,
+            autoHideDelay: 5000,
+            toaster: 'b-toaster-top-right',
+          }
+        );
+
+        setTimeout(() => {
+          this.$router.push("/vendor/overview");
+        }, 4000); 
+      } catch (error) {
+        console.error("Login failed:", error);
+        this.errors.phoneNumber = error.message || "Incorrect phone number or password";
+      } finally {
+        this.loading = false;
       }
     },
-    togglePassword(field) {
-      if (field === "password") {
-        this.showPassword = !this.showPassword;
-      }
+    togglePassword() {
+      this.showPassword = !this.showPassword;
     },
   },
 };
 </script>
+
 
 
 <style scoped>

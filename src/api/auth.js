@@ -12,3 +12,15 @@ export const registerVendor = async (vendorData) => {
     throw error.response ? error.response.data : error;
   }
 };
+
+
+export const loginVendor = async (loginData) => {
+  try {
+    const response = await apiClient.post("/auth/login", loginData);
+    localStorage.setItem("vendorSession", JSON.stringify(response.data));
+
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
