@@ -3,7 +3,7 @@
     <div class="signup-card">
       <div class="left-section">
         <div class="branding">
-          <img src="/img/et-buy.png" alt="EtBuy Logo" class="logo" />
+          <img src="img/et-buy.png" alt="EtBuy Logo" class="logo" />
           <h2>Welcome to EtBuy Vendor Sign-Up</h2>
           <p>Start your journey with EtBuy and grow your business with ease!</p>
         </div>

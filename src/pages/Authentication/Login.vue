@@ -3,7 +3,7 @@
     <div class="login-card">
       <div class="left-section">
         <div class="branding">
-          <img src="/img/et-buy.png" alt="EtBuy Logo" class="logo" />
+          <img src="img/et-buy.png" alt="EtBuy Logo" class="logo" />
           <h2>Welcome Back to EtBuy</h2>
           <p>Login to manage your business on EtBuy and start selling!</p>
         </div>
