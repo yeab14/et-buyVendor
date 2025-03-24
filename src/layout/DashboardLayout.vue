@@ -23,7 +23,7 @@
         <i class="nc-icon nc-single-02"></i>
         <p>Customer Interaction</p>
       </sidebar-link>
-      <sidebar-link to="/vendor/StoreSetting ">
+      <sidebar-link to="/vendor/StoreSetting">
         <i class="nc-icon nc-settings-gear-64"></i>
         <p>Store Settings</p>
       </sidebar-link>

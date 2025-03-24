@@ -125,7 +125,6 @@ export default {
   bottom: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(to right, #ffcd39, #ffffff);
   background-size: 200% auto;
   animation: animateGlow 4s linear infinite;
   border-radius: 3px;

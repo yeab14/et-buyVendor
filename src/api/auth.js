@@ -1,4 +1,4 @@
-import apiClient from "src/axios/axios";
+import apiClient from "@/axios/axios";
 
 export const registerVendor = async (vendorData) => {
   try {

@@ -1,29 +1,27 @@
-import DashboardLayout from '../layout/DashboardLayout.vue'
-// GeneralViews
-import NotFound from '../pages/NotFoundPage.vue'
+import DashboardLayout from '@/layout/DashboardLayout.vue';
+import NotFound from '@/pages/NotFoundPage.vue';
 
-// vendor pages
-import Overview from 'src/pages/Overview.vue'
-import UserProfile from 'src/pages/UserProfile.vue'
-import OrderManagement from 'src/pages/OrderManagement.vue'
-import ProductManagement from 'src/pages/ProductManagement/ProductManagement.vue'
-import Icons from 'src/pages/Icons.vue'
-import CustomerInteraction from 'src/pages/CustomerInteraction.vue'
-import StoreSetting  from 'src/pages/StoreSetting.vue'
-import FAQ from 'src/pages/FAQ.vue'
-import Financial from 'src/pages/Financial.vue'
-import Signup from 'src/pages/Authentication/Signup.vue'
-import Login from 'src/pages/Authentication/Login.vue'
+// Vendor pages
+import Overview from '@/pages/Overview.vue';
+import UserProfile from '@/pages/UserProfile.vue';
+import OrderManagement from '@/pages/OrderManagement.vue';
+import ProductManagement from '@/pages/ProductManagement/ProductManagement.vue';
+import Icons from '@/pages/Icons.vue';
+import CustomerInteraction from '@/pages/CustomerInteraction.vue';
+import StoreSetting from '@/pages/StoreSetting.vue';
+import FAQ from '@/pages/FAQ.vue';
+import Financial from '@/pages/Financial.vue';
+
+// Authentication pages
+import Signup from '@/pages/Authentication/Signup.vue';
+import Login from '@/pages/Authentication/Login.vue';
+
 
 const routes = [
  
   {
     path: '/',
-    redirect: '/vendor/signup',  
-  },
-  {
-    path: '/vendor/signup',
-    component: Signup,
+    component: Signup,  
     name: 'Signup',
     meta: { requiresAuth: false }
   },
