@@ -2,7 +2,7 @@ import apiClient from "@/axios/axios";
 
 export const registerVendor = async (vendorData) => {
   try {
-    const response = await apiClient.post("/auth/register", vendorData);
+    const response = await apiClient.post("/vendor/auth/register", vendorData);
     
  
     localStorage.setItem("vendorData", JSON.stringify(response.data));
@@ -16,7 +16,7 @@ export const registerVendor = async (vendorData) => {
 
 export const loginVendor = async (loginData) => {
   try {
-    const response = await apiClient.post("/auth/login", loginData);
+    const response = await apiClient.post("/vendor/auth/login", loginData);
     localStorage.setItem("vendorSession", JSON.stringify(response.data));
 
     return response.data;
