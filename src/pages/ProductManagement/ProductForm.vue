@@ -126,10 +126,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 import * as Yup from "yup";
+import fetchCategories from "@/api/categories";
+import fetchSubCategories from "@/api/subcategories"; 
 
-// Product form data
+
 const product = ref({
   name: "",
   category: { id: null },
@@ -149,40 +151,53 @@ const product = ref({
   additionalInformation: "",
 });
 
-// Error messages object
-const errors = ref({
-  name: "",
-  category: "",
-  subCategory: "",
-  rating: "",
-  sku: "",
-  originalPrice: "",
-  currentPrice: "",
-  description: "",
-});
-
-// Example data for categories, subcategories, and shipping options
-const categories = ref([
-  { id: 1, name: "Electronics" },
-  { id: 2, name: "Clothing" },
-]);
-
-const subCategories = ref([
-  { id: 1, name: "Phones" },
-  { id: 2, name: "Laptops" },
-]);
-
+const categories = ref([]);
+const subCategories = ref([]);
 const attributes = ref([
   { id: 1, name: "Color" },
   { id: 2, name: "Size" },
 ]);
-
 const shippingOptions = ref([
   { id: 1, name: "Express" },
   { id: 2, name: "Standard" },
 ]);
 
-// Validation schema with Yup
+const selectedAttribute = ref("");
+const selectedShippingOption = ref("");
+
+
+const fetchAllCategories = async () => {
+  try {
+    const data = await fetchCategories();
+    categories.value = data.categories || data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
+};
+
+
+watch(
+  () => product.value.category.id,
+  async (newCategoryId) => {
+    if (newCategoryId) {
+      try {
+        const subCategoryData = await fetchSubCategories(newCategoryId);
+        subCategories.value = Array.isArray(subCategoryData) ? subCategoryData : subCategoryData.subCategories || [];
+        product.value.subCategory.id = null;
+      } catch (error) {
+        console.error("Error fetching subcategories:", error);
+      }
+    } else {
+      subCategories.value = [];
+      product.value.subCategory.id = null;
+    }
+  }
+);
+
+onMounted(() => {
+  fetchAllCategories();
+});
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Product Name is required."),
   category: Yup.object().shape({
@@ -210,6 +225,7 @@ const submitForm = async () => {
   try {
     await validationSchema.validate(product.value, { abortEarly: false });
     console.log("Form submitted successfully with product data:", product.value);
+
   } catch (err) {
     errors.value = {};
     err.inner.forEach((e) => {
@@ -218,7 +234,36 @@ const submitForm = async () => {
   }
 };
 
+const addAttribute = () => {
+  if (selectedAttribute.value && !product.value.attributes.includes(selectedAttribute.value)) {
+    product.value.attributes.push(selectedAttribute.value);
+    selectedAttribute.value = "";
+  }
+};
+
+const removeAttribute = (attr) => {
+  product.value.attributes = product.value.attributes.filter((a) => a !== attr);
+};
+
+const addShippingInfo = () => {
+  if (selectedShippingOption.value && !product.value.shippingInfo.includes(selectedShippingOption.value)) {
+    product.value.shippingInfo.push(selectedShippingOption.value);
+    selectedShippingOption.value = "";
+  }
+};
+
+const removeShippingInfo = (option) => {
+  product.value.shippingInfo = product.value.shippingInfo.filter((o) => o !== option);
+};
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    product.value.image = file; 
+  }
+};
 </script>
+
 
 <style scoped>
 .form-container {
