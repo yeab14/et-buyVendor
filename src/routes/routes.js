@@ -11,6 +11,7 @@ import CustomerInteraction from '@/pages/CustomerInteraction.vue';
 import StoreSetting from '@/pages/StoreSetting.vue';
 import FAQ from '@/pages/FAQ.vue';
 import Financial from '@/pages/Financial.vue';
+import DynamicInput from '@/pages/ProductManagement/DynamicInput.vue'
 
 // Authentication pages
 import Signup from '@/pages/Authentication/Signup.vue';
@@ -58,6 +59,11 @@ const routes = [
         name: 'ProductManagement',
         component: ProductManagement
       },
+      // {
+      //   path: 'DynamicInput',
+      //   name: 'DynamicInput',
+      //   component:DynamicInput
+      // },
       {
         path: 'icons',
         name: 'Icons',

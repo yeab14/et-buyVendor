@@ -67,20 +67,24 @@
         <input type="text" v-model="product.tag" />
       </div>
 
-      <!-- Attributes -->
-      <div class="form-group">
-        <label>Attributes</label>
-        <div class="multi-select">
-          <div class="chip" v-for="attr in product.attributes" :key="attr" @click="removeAttribute(attr)">
-            <span>{{ attr }}</span>
-            <button type="button" class="clear-btn">×</button>
-          </div>
-          <select v-model="selectedAttribute" @change="addAttribute" class="attribute-select">
-            <option disabled value="">Select Attribute</option>
-            <option v-for="attr in attributes" :key="attr.id" :value="attr.name">{{ attr.name }}</option>
-          </select>
-        </div>
-      </div>
+ <!-- Attributes -->
+<div class="form-group">
+  <label>Attributes</label>
+  <div v-for="attribute in attributeDefinitions" :key="attribute.id">
+    <label>{{ attribute.name }}</label>
+    <DynamicInput
+    :inputType="attribute.inputType"
+    v-model="attributeValues[attribute.id]"
+    :options="attribute.options ? attribute.options.map(option => ({ id: option.id, value: option.value, label: option.label })) : []"
+  />
+  </div>
+</div>
+
+
+<div v-for="attribute in attributeDefinitions" :key="attribute.id">
+  <label>{{ attribute.name }}</label>
+  <div>Dynamic Input Placeholder</div> <!-- Replace with DynamicInput to debug -->
+</div>
 
       <!-- Shipping Info -->
       <div class="form-group">
@@ -130,6 +134,8 @@ import { ref, onMounted, watch } from "vue";
 import * as Yup from "yup";
 import fetchCategories from "@/api/categories";
 import fetchSubCategories from "@/api/subcategories"; 
+import fetchAttributeDefinitionsBySubCategory from "@/api/attributeDefinition";
+import DynamicInput from '@/pages/ProductManagement/DynamicInput.vue'
 
 
 const product = ref({
@@ -153,14 +159,8 @@ const product = ref({
 
 const categories = ref([]);
 const subCategories = ref([]);
-const attributes = ref([
-  { id: 1, name: "Color" },
-  { id: 2, name: "Size" },
-]);
-const shippingOptions = ref([
-  { id: 1, name: "Express" },
-  { id: 2, name: "Standard" },
-]);
+const attributeDefinitions = ref([]);
+const attributeValues = ref({});
 
 const selectedAttribute = ref("");
 const selectedShippingOption = ref("");
@@ -190,6 +190,25 @@ watch(
     } else {
       subCategories.value = [];
       product.value.subCategory.id = null;
+    }
+  }
+);
+
+watch(
+  () => product.value.subCategory.id,
+  async (newSubCategoryId) => {
+    if (newSubCategoryId) {
+      try {
+        const attributesData = await fetchAttributeDefinitionsBySubCategory(newSubCategoryId);
+        console.log("Attributes fetched:", attributesData); 
+        attributeDefinitions.value = attributesData;
+        attributeValues.value = {};
+      } catch (error) {
+        console.error("Error fetching attribute definitions:", error);
+      }
+    } else {
+      attributeDefinitions.value = [];
+      attributeValues.value = {};
     }
   }
 );
@@ -224,25 +243,29 @@ const validationSchema = Yup.object({
 const submitForm = async () => {
   try {
     await validationSchema.validate(product.value, { abortEarly: false });
+    product.value.attributes = Object.keys(attributeValues.value).map(attrId => ({
+      attributeDefinitionId: attrId,
+      value: attributeValues.value[attrId],
+    }));
     console.log("Form submitted successfully with product data:", product.value);
-
   } catch (err) {
-    errors.value = {};
+    const errors = {};
     err.inner.forEach((e) => {
-      errors.value[e.path] = e.message;
+      errors[e.path] = e.message;
     });
+    console.error("Validation errors:", errors);
   }
 };
 
-const addAttribute = () => {
-  if (selectedAttribute.value && !product.value.attributes.includes(selectedAttribute.value)) {
-    product.value.attributes.push(selectedAttribute.value);
-    selectedAttribute.value = "";
+
+const addAttributeValue = (attributeId, value) => {
+  if (value) {
+    attributeValues.value[attributeId] = value;
   }
 };
 
-const removeAttribute = (attr) => {
-  product.value.attributes = product.value.attributes.filter((a) => a !== attr);
+const removeAttributeValue = (attributeId) => {
+  delete attributeValues.value[attributeId];
 };
 
 const addShippingInfo = () => {
