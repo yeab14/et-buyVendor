@@ -1,9 +1,7 @@
 <template>
   <footer class="footer">
-    <div class="container-fluid">
-      <div class="footer-content">
-        <span>&copy; {{ currentYear }} Cedora Technology (Hong Kong) Limited. All rights reserved.</span>
-      </div>
+    <div class="footer-content">
+      <span>&copy; {{ currentYear }} Cedora Technology (Hong Kong) Limited. All rights reserved.</span>
     </div>
   </footer>
 </template>
@@ -20,9 +18,6 @@ export default {
 
 <style scoped>
 .footer {
-  position: fixed;
-  bottom: 0;
-  left: 20vh;
   width: 100%;
   background-color: #ee5858;
   color: white;
@@ -31,14 +26,15 @@ export default {
   font-size: 14px;
   font-weight: 500;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
+  font-family: 'Helvetica Neue', sans-serif;
+  margin-top: auto;
 }
 
 .footer-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  font-family: 'Helvetica Neue', sans-serif;
+  flex-wrap: wrap;
 }
 
 .footer-content span {
@@ -49,5 +45,18 @@ export default {
 .footer-content span:hover {
   text-decoration: underline;
   font-weight: 600;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .footer {
+    padding: 15px 10px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .footer-content {
+    flex-direction: column;
+  }
 }
 </style>
