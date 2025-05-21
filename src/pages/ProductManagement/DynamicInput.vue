@@ -1,116 +1,111 @@
 <template>
-    <div class="dynamic-input">
-      <!-- SELECT Input -->
+  <div class="dynamic-input">
+    <!-- SELECT Input -->
+    <div v-if="inputType === 'SELECT'" class="form-group">
       <select
-        v-if="inputType === 'SELECT'"
-        v-model="internalValue"
-        @change="updateValue"
-        class="form-control select-input"
+        :value="modelValue"
+        @change="(e) => updateValue(e.target.value)"
+        class="select attribute-select"
       >
-        <option disabled value="">Select an option</option>
+        <option value="" disabled>Select an option</option>
         <option
           v-for="option in options"
           :key="option.id"
           :value="option.value"
         >
-          {{ option.label }}
+          {{ option.value }}
         </option>
       </select>
-  
-      <!-- TEXT Input -->
-      <input
-        v-else-if="inputType === 'TEXT'"
-        type="text"
-        v-model="internalValue"
-        @input="updateValue"
-        class="form-control text-input"
-      />
-  
-      <!-- NUMBER Input -->
-      <input
-        v-else-if="inputType === 'NUMBER'"
-        type="number"
-        v-model.number="internalValue"
-        @input="updateValue"
-        class="form-control number-input"
-      />
-  
-      <!-- Default fallback -->
-      <input
-        v-else
-        type="text"
-        v-model="internalValue"
-        @input="updateValue"
-        class="form-control default-input"
-      />
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, watch } from 'vue';
-  
-  const props = defineProps({
-    modelValue: [String, Number, null],
-    inputType: {
-      type: String,
-      default: 'TEXT',
-    },
-    options: {
-      type: Array,
-      default: () => [],
-    },
-  });
-  
-  const emit = defineEmits(['update:modelValue']);
-  
-  const internalValue = ref(props.modelValue);
-  
-  watch(
-    () => props.modelValue,
-    (newVal) => {
-      internalValue.value = newVal;
-    }
-  );
-  
-  const updateValue = () => {
-    emit('update:modelValue', internalValue.value);
-  };
-  </script>
-  
-  <style scoped>
-  .dynamic-input {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin: 1rem 0;
-    font-family: 'Playfair Display', serif;
-  }
-  
-  .form-control {
-    padding: 0.75rem 1rem;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  .form-control:focus {
-    border-color: #e63946; /* vivid red accent */
-    box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.2);
-    outline: none;
-  }
-  
-  .select-input {
-    background-color: #fffafc;
-  }
-  
-  .number-input {
-    background-color: #fff7f9;
-  }
-  
-  .text-input {
-    background-color: #fff5f6;
-  }
-  </style>
-  
+
+    <!-- TEXT Input -->
+    <input
+      v-else-if="inputType === 'TEXT'"
+      type="text"
+      :value="modelValue"
+      @input="(e) => updateValue(e.target.value)"
+      class="input"
+    />
+
+    <!-- NUMBER Input -->
+    <input
+      v-else-if="inputType === 'NUMBER'"
+      type="number"
+      :value="modelValue"
+      @input="(e) => updateValue(e.target.value)"
+      class="input"
+    />
+
+    <!-- Default fallback -->
+    <input
+      v-else
+      type="text"
+      :value="modelValue"
+      @input="(e) => updateValue(e.target.value)"
+      class="input"
+    />
+  </div>
+</template>
+
+<script setup>
+import { watch } from 'vue';
+
+const props = defineProps({
+  inputType: String,
+  modelValue: [String, Number],
+  options: {
+    type: Array,
+    default: () => [],
+  },
+});
+
+const emit = defineEmits(['update:modelValue']);
+
+const updateValue = (value) => {
+  emit('update:modelValue', value);
+};
+
+// Debug
+watch(() => props.options, (newOptions) => {
+  console.log('Options updated:', newOptions);
+}, { immediate: true });
+</script>
+
+<style scoped>
+.dynamic-input {
+  width: 100%;
+}
+
+.input,
+.select {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+  width: 100%;
+  appearance: none; /* Remove default styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  background-image: none;
+}
+
+.select:focus {
+  border-color: #ee5858 !important; /* Enforce red on focus */
+  outline: none;
+  box-shadow: none; /* Remove default blue glow (especially in Firefox) */
+}
+
+.input:focus,
+.select:focus {
+  border-color: #ee5858;
+  outline: none;
+}
+
+.select.attribute-select {
+  flex-grow: 1;
+  border-radius: 8px;
+  background-color: #fff;
+}
+</style>
