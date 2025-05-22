@@ -2,136 +2,160 @@
   <div class="vendor-dashboard">
     <div class="container-fluid">
 
-      <!-- Header Section -->
+      <!-- Enhanced Header Section -->
       <div class="dashboard-header">
         <h1>Vendor Dashboard</h1>
-        <p>Welcome! Here's an overview of your business performance.</p>
+        <p>Welcome back! Here's your business performance at a glance.</p>
       </div>
 
-      <!-- Vendor Stats Cards -->
+      <!-- Modern Stats Cards -->
       <div class="row">
+        <!-- Revenue Card -->
         <div class="col-xl-3 col-md-6">
           <stats-card :brand-color="brandColor">
-            <div slot="header" class="icon-success">
-              <i class="nc-icon nc-money-coins text-success"></i>
+            <div slot="header">
+              <div class="icon-wrapper">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
             </div>
             <div slot="content">
               <p class="card-category">Total Revenue</p>
-              <h4 class="card-title">${{ totalRevenue }}</h4>
+              <h4 class="card-title">${{ totalRevenue.toLocaleString() }}</h4>
             </div>
             <div slot="footer">
-              <i class="fa fa-calendar-o"></i> Last 30 Days
+              <i class="fas fa-calendar"></i>
+              Last 30 Days
             </div>
           </stats-card>
         </div>
 
-<!-- Total Products -->
-<div class="col-xl-3 col-md-6">
-  <stats-card :brand-color="brandColor">
-    <div slot="header" class="icon-info">
-      <i class="fa fa-box"></i>
-    </div>
-    
-    <div slot="content">
-      <p class="card-category">Total Products</p>
-      <h4 class="card-title">{{ totalProducts }}</h4>
-    </div>
-    <div slot="footer">
-      <i class="fa fa-cubes"></i> Active & Inactive
-    </div>
-  </stats-card>
-</div>
-
-
+        <!-- Products Card -->
         <div class="col-xl-3 col-md-6">
           <stats-card :brand-color="brandColor">
-            <div slot="header" class="icon-warning">
-              <i class="nc-icon nc-bell-55 text-warning"></i>
+            <div slot="header">
+              <div class="icon-wrapper">
+                <i class="fas fa-box"></i>
+              </div>
+            </div>
+            <div slot="content">
+              <p class="card-category">Total Products</p>
+              <h4 class="card-title">{{ totalProducts.toLocaleString() }}</h4>
+            </div>
+            <div slot="footer">
+              <i class="fas fa-cubes"></i>
+              Active & Inactive
+            </div>
+          </stats-card>
+        </div>
+
+        <!-- Orders Card -->
+        <div class="col-xl-3 col-md-6">
+          <stats-card :brand-color="brandColor">
+            <div slot="header">
+              <div class="icon-wrapper">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
             </div>
             <div slot="content">
               <p class="card-category">Pending Orders</p>
               <h4 class="card-title">{{ pendingOrders }}</h4>
             </div>
             <div slot="footer">
-              <i class="fa fa-shopping-cart"></i> Awaiting Processing
+              <i class="fas fa-clock"></i>
+              Awaiting Processing
             </div>
           </stats-card>
         </div>
 
-
-<!-- Customer Rating -->
-<div class="col-xl-3 col-md-6">
-  <stats-card :brand-color="brandColor">
-<!-- Customer Rating -->
-<div slot="header" class="icon-danger">
-  <i class="fa fa-star text-danger"></i>  
-</div>
-
-    <div slot="content">
-      <p class="card-category">Customer Rating</p>
-      <h4 class="card-title">{{ customerRating }}/5</h4>
-    </div>
-    <div slot="footer">
-      <i class="fa fa-smile-o"></i> Overall Satisfaction
-    </div>
-  </stats-card>
-</div>
+        <!-- Rating Card -->
+        <div class="col-xl-3 col-md-6">
+          <stats-card :brand-color="brandColor">
+            <div slot="header">
+              <div class="icon-wrapper">
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+            <div slot="content">
+              <p class="card-category">Customer Rating</p>
+              <h4 class="card-title">{{ customerRating }}/5</h4>
+            </div>
+            <div slot="footer">
+              <i class="fas fa-smile"></i>
+              Overall Satisfaction
+            </div>
+          </stats-card>
+        </div>
       </div>
 
-      <!-- Charts Section -->
+      <!-- Enhanced Charts Section -->
       <div class="row">
+        <!-- Sales Trend Chart -->
         <div class="col-md-8">
-          <chart-card :chart-data="salesTrend.data"
-                      :chart-options="salesTrend.options"
-                      :responsive-options="salesTrend.responsiveOptions"
-                      chart-type="Line"
-                      :brand-color="brandColor">
+          <chart-card
+            :chart-data="salesTrend.data"
+            :chart-options="salesTrend.options"
+            :responsive-options="salesTrend.responsiveOptions"
+            chart-type="Line"
+            :brand-color="brandColor"
+          >
             <template slot="header">
-              <h4 class="card-title">Sales Trend</h4>
-              <p class="card-category">Last 7 Days</p>
+              <h4 class="card-title">Sales Performance</h4>
+              <p class="card-category">Weekly Revenue Trend</p>
             </template>
             <template slot="footer">
               <div class="legend">
-                <i class="fa fa-circle" :style="{color: brandColor}"></i> Sales
+                <i class="fas fa-circle text-primary"></i> Revenue
+                <i class="fas fa-circle text-info"></i> Orders
               </div>
               <hr>
               <div class="stats">
-                <i class="fa fa-history"></i> Updated just now
+                <i class="fas fa-sync"></i> Updated just now
               </div>
             </template>
           </chart-card>
         </div>
 
+        <!-- Customer Feedback Chart -->
         <div class="col-md-4">
-          <chart-card :chart-data="feedbackTrend.data" chart-type="Line" :brand-color="brandColor">
+          <chart-card
+            :chart-data="feedbackTrend.data"
+            chart-type="Line"
+            :brand-color="brandColor"
+          >
             <template slot="header">
               <h4 class="card-title">Customer Feedback</h4>
-              <p class="card-category">Last 7 Days</p>
+              <p class="card-category">Daily Satisfaction Score</p>
             </template>
             <template slot="footer">
               <div class="legend">
-                <i class="fa fa-circle text-success"></i> Positive
-                <i class="fa fa-circle text-danger"></i> Negative
+                <i class="fas fa-circle text-success"></i> Positive
+                <i class="fas fa-circle text-danger"></i> Negative
               </div>
               <hr>
               <div class="stats">
-                <i class="fa fa-clock-o"></i> Last feedback: 1 hour ago
+                <i class="fas fa-history"></i> Last update: 1 hour ago
               </div>
             </template>
           </chart-card>
         </div>
       </div>
 
+      <!-- Product Distribution and Tasks -->
       <div class="row">
+        <!-- Product Distribution -->
         <div class="col-md-6">
-          <chart-card :chart-data="productDistribution.data" chart-type="Pie" :brand-color="brandColor">
+          <chart-card
+            :chart-data="productDistribution.data"
+            chart-type="Pie"
+            :brand-color="brandColor"
+          >
             <template slot="header">
-              <h4 class="card-title">Product Distribution</h4>
-              <p class="card-category">By Category</p>
+              <h4 class="card-title">Product Categories</h4>
+              <p class="card-category">Distribution by Category</p>
             </template>
             <template slot="footer">
               <div class="stats">
-                <i class="fa fa-refresh"></i> Updated every 24 hours
+                <i class="fas fa-chart-pie"></i> Updated daily
               </div>
             </template>
           </chart-card>
@@ -141,25 +165,22 @@
         <div class="col-md-6">
           <card :brand-color="brandColor">
             <template slot="header">
-              <h5 class="title">Pending Tasks</h5>
-              <p class="category">Vendor's backend tasks</p>
+              <h4 class="card-title">Pending Tasks</h4>
+              <p class="card-category">Action Items</p>
             </template>
             <l-table :data="taskData.data" :columns="taskData.columns">
               <template slot="columns"></template>
-
               <template slot-scope="{row}">
                 <td>
                   <base-checkbox v-model="row.checked"></base-checkbox>
                 </td>
                 <td>{{ row.title }}</td>
                 <td class="td-actions text-right">
-                  <button type="button" class="btn-simple btn btn-xs btn-info"
-                          v-tooltip.top-center="editTooltip">
-                    <i class="fa fa-edit"></i>
+                  <button type="button" class="btn-simple btn btn-info" v-tooltip.top-center="editTooltip">
+                    <i class="fas fa-edit"></i>
                   </button>
-                  <button type="button" class="btn-simple btn btn-xs btn-danger"
-                          v-tooltip.top-center="deleteTooltip">
-                    <i class="fa fa-times"></i>
+                  <button type="button" class="btn-simple btn btn-danger" v-tooltip.top-center="deleteTooltip">
+                    <i class="fas fa-trash"></i>
                   </button>
                 </td>
               </template>
@@ -167,7 +188,7 @@
             <div class="footer">
               <hr>
               <div class="stats">
-                <i class="fa fa-history"></i> Updated 5 minutes ago
+                <i class="fas fa-sync"></i> Last updated 5 minutes ago
               </div>
             </div>
           </card>
@@ -259,218 +280,267 @@ export default {
 </script>
 
 <style scoped>
-/* General Styles */
+/* Modern Dashboard Theme */
 .vendor-dashboard {
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-  padding: 20px;
+  font-family: 'Inter', 'Arial', sans-serif;
+  background-color: #f8f9fe;
+  padding: 2rem;
+  min-height: 100vh;
 }
 
 .container-fluid {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
-/* Dashboard Header */
+/* Enhanced Dashboard Header */
 .dashboard-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.dashboard-header h1 {
-  font-size: 2.5em;
-  color: #333;
-  margin-bottom: 5px;
-}
-
-.dashboard-header p {
-  font-size: 1.1em;
-  color: #777;
-}
-
-/* Stats Cards */
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.col-xl-3 {
-  width: 25%;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.col-md-6,
-.col-md-8,
-.col-md-4 {
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-/* Chart Card Styles */
-.chart-card .card-title {
-  font-size: 1.5em;
-  color: #333;
-}
-
-.chart-card .card-category {
-  font-size: 0.9em;
-  color: #777;
-}
-
-/* Table Styles */
-.l-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-.l-table th,
-.l-table td {
-  padding: 8px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.l-table th {
-  background-color: #f2f2f2;
-}
-
-.l-table .td-actions {
-  text-align: right;
-}
-
-/* Component Specific Styling */
-.icon-success i {
-  color: #28a745;
-}
-
-.icon-info i {
-  color: #17a2b8;
-}
-
-.icon-warning i {
-  color: #ffc107;
-}
-
-.icon-danger i {
-  color: #dc3545;
-}
-
-/* General Styles */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
-}
-
-/* Vendor Dashboard */
-.vendor-dashboard {
-  padding: 20px;
-}
-
-.container-fluid {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Cards */
-.card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  padding: 20px;
-}
-
-/* Header Section */
-.dashboard-header {
-  text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 2.5rem;
+  position: relative;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(238, 88, 88, 0.1);
 }
 
 .dashboard-header h1 {
-  font-size: 2.5em;
-  color: #333;
-  margin-bottom: 5px;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #ee5858, #e63946);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .dashboard-header p {
-  font-size: 1.1em;
-  color: #777;
+  font-size: 1.1rem;
+  color: #64748b;
+  font-weight: 500;
 }
 
-/* Stats Card */
+/* Modern Stats Cards */
 .stats-card {
-  border-left: 5px solid #ee5858;
-  padding: 15px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  transition: transform 0.3s ease;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(238, 88, 88, 0.08);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(238, 88, 88, 0.1);
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #ee5858, #e63946);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .stats-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(238, 88, 88, 0.12);
 }
 
-.stats-card .icon-success,
-.stats-card .icon-info,
-.stats-card .icon-warning,
-.stats-card .icon-danger {
-  font-size: 2em;
-  margin-bottom: 10px;
+.stats-card:hover::before {
+  opacity: 1;
+}
+
+.stats-card .icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  background: rgba(238, 88, 88, 0.1);
+}
+
+.stats-card i {
+  font-size: 1.5rem;
+  color: #ee5858;
 }
 
 .stats-card .card-category {
-  color: #777;
-  font-size: 14px;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
 }
 
 .stats-card .card-title {
-  font-size: 22px;
-  font-weight: bold;
-  color: #333;
-  letter-spacing: 1px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
 }
 
 .stats-card .footer {
-  color: #777;
-  font-size: 12px;
-  margin-top: 15px;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(238, 88, 88, 0.1);
+  color: #64748b;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* Responsive Styles */
+/* Enhanced Chart Cards */
+.chart-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(238, 88, 88, 0.08);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(238, 88, 88, 0.1);
+}
+
+.chart-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.chart-card .card-category {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+.chart-card .legend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.chart-card .legend i {
+  font-size: 0.8rem;
+}
+
+.chart-card hr {
+  border: none;
+  height: 1px;
+  background: rgba(238, 88, 88, 0.1);
+  margin: 1rem 0;
+}
+
+.chart-card .stats {
+  color: #64748b;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Task Management Section */
+.l-table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: separate;
+  margin-top: 1rem;
+}
+
+.l-table th {
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  padding: 1rem;
+  background: rgba(238, 88, 88, 0.05);
+  border-bottom: 2px solid rgba(238, 88, 88, 0.1);
+}
+
+.l-table td {
+  padding: 1rem;
+  color: #2c3e50;
+  border-bottom: 1px solid rgba(238, 88, 88, 0.1);
+  font-size: 0.9rem;
+}
+
+.l-table tr:hover td {
+  background: rgba(238, 88, 88, 0.02);
+}
+
+.btn-simple {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-simple.btn-info:hover {
+  background: rgba(238, 88, 88, 0.1);
+  color: #ee5858;
+}
+
+.btn-simple.btn-danger:hover {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .container-fluid {
+    padding: 0 1rem;
+  }
+  
+  .stats-card {
+    margin-bottom: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .dashboard-header {
+    text-align: center;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+  
   .col-xl-3 {
     width: 50%;
   }
-
-  .dashboard-header h1 {
-    font-size: 2em;
+  
+  .stats-card {
+    margin-bottom: 1rem;
   }
-
-  .dashboard-header p {
-    font-size: 1em;
+  
+  .chart-card {
+    margin-bottom: 1rem;
   }
 }
 
 @media (max-width: 576px) {
+  .vendor-dashboard {
+    padding: 1rem;
+  }
+  
   .col-xl-3 {
     width: 100%;
   }
-
-  .dashboard-header h1 {
-    font-size: 1.8em;
+  
+  .stats-card {
+    margin-bottom: 1rem;
   }
-
-  .dashboard-header p {
-    font-size: 0.9em;
+  
+  .dashboard-header h1 {
+    font-size: 1.75rem;
   }
 }
 </style>
