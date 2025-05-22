@@ -102,6 +102,11 @@ export default {
           password: this.vendor.password,
         });
 
+        // Store the token
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+        }
+
         this.$bvToast.toast(
           '✅ Welcome back! You have successfully logged in to your EtBuy vendor account. 🚀 Time to manage your business and boost your sales! Redirecting you to your dashboard...',
           {
@@ -115,7 +120,7 @@ export default {
 
         setTimeout(() => {
           this.$router.push("/vendor/overview");
-        }, 4000); 
+        }, 4000);
       } catch (error) {
         console.error("Login failed:", error);
         this.errors.phoneNumber = error.message || "Incorrect phone number or password";

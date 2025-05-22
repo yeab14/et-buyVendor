@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 import axios from 'axios';
 
-
 const apiClient = axios.create({
   baseURL: `${process.env.API_BASE_URL}/api`,  
   headers: {
@@ -11,26 +10,30 @@ const apiClient = axios.create({
   timeout: 10000,  
 });
 
-
+// Request interceptor - adds token to all requests
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;  
+    const vendorSession = localStorage.getItem("vendorSession");
+    if (vendorSession) {
+      const sessionData = JSON.parse(vendorSession);
+      if (sessionData && sessionData.jwt) {
+        config.headers.Authorization = `Bearer ${sessionData.jwt}`;  
+      }
     }
     return config;
   },
   (error) => Promise.reject(error) 
 );
 
-
+// Response interceptor - handles unauthorized responses
 apiClient.interceptors.response.use(
-  (response) => response,  
+  (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      
+      // Handle unauthorized access
+      console.error('Unauthorized access:', error);
     }
-    return Promise.reject(error);  
+    return Promise.reject(error);
   }
 );
 

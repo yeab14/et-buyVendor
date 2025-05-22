@@ -8,7 +8,7 @@
           <h3 class="section-title">Category Details</h3>
           <div class="form-group">
             <label>Category</label>
-            <select v-model="product.category.id" required>
+            <select v-model="product.categoryId" required>
               <option disabled value="">Select Category</option>
               <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
             </select>
@@ -16,7 +16,7 @@
 
           <div class="form-group">
             <label>Sub Category</label>
-            <select v-model="product.subCategory.id" required>
+            <select v-model="product.subCategoryId" required>
               <option disabled value="">Select Sub Category</option>
               <option v-for="subCategory in subCategories" :key="subCategory.id" :value="subCategory.id">{{ subCategory.name }}</option>
             </select>
@@ -41,6 +41,8 @@
             <input type="text" v-model="product.sku" required />
           </div>
         </div>
+
+       
 
         <!-- Pricing Section -->
         <div class="form-section">
@@ -88,6 +90,14 @@
           </div>
         </div>
 
+           <!-- Description Section -->
+           <div class="form-section full-width">
+            <h3 class="section-title">Product Description</h3>
+            <div class="form-group">
+              <textarea v-model="product.description" rows="4" placeholder="Enter product description"></textarea>
+            </div>
+          </div>
+
         <!-- Attributes Section -->
         <div class="form-section full-width">
           <h3 class="section-title">Product Attributes</h3>
@@ -96,37 +106,65 @@
               <label class="form-label">{{ attribute.name }}</label>
               <DynamicInput
                 :inputType="attribute.inputType"
-                v-model="attributeValues[attribute.id]"
+                :value="attributeValues[attribute.id]?.value"
+                @update:modelValue="(value, selectedOption) => updateAttributeValue(attribute.id, value, selectedOption)"
                 :options="attributeOptions[attribute.id] || []"
               />
             </div>
           </div>
         </div>
 
-        <!-- Shipping Section -->
-        <div class="form-section full-width">
-          <h3 class="section-title">Shipping Information</h3>
-          <div class="shipping-container">
-            <div class="chips-container">
-              <div class="chip" v-for="option in product.shippingInfo" :key="option" @click="removeShippingInfo(option)">
-                <span>{{ option }}</span>
-                <button type="button" class="clear-btn">×</button>
-              </div>
-            </div>
-            <select v-model="selectedShippingOption" @change="addShippingInfo" class="shipping-select">
-              <option disabled value="">Select Shipping Info</option>
-              <option v-for="option in shippingOptions" :key="option.id" :value="option.name">{{ option.name }}</option>
-            </select>
-          </div>
-        </div>
+<!-- Shipping Section -->
+<div class="form-section full-width">
+  <h3 class="section-title">Shipping Information</h3>
+  <div class="shipping-container">
+    <!-- Selected Shipping Chips -->
+    <div class="chips-container">
+      <div
+        class="chip"
+        v-for="option in product.shippingInfo"
+        :key="option"
+        @click="removeShippingInfo(option)"
+      >
+        <span>{{ option }}</span>
+        <button type="button" class="clear-btn">×</button>
+      </div>
+    </div>
 
-        <!-- Description Section -->
-        <div class="form-section full-width">
-          <h3 class="section-title">Product Description</h3>
-          <div class="form-group">
-            <textarea v-model="product.description" rows="4" placeholder="Enter product description"></textarea>
-          </div>
-        </div>
+    <!-- Shipping Provider Dropdown -->
+    <select
+      v-model="selectedShippingOption"
+      @change="addShippingInfo"
+      class="shipping-select"
+    >
+      <option disabled value="">Select Shipping Provider</option>
+      <option
+        v-for="provider in shippingProviders"
+        :key="provider.id"
+        :value="provider.name"
+      >
+        {{ provider.name }} - ${{ provider.baseCost }} | {{ provider.minDeliveryDays }}-{{ provider.maxDeliveryDays }} days
+      </option>
+    </select>
+
+    <!-- Provider Details Card -->
+    <div v-if="providerDetails" class="provider-details">
+      <div class="provider-card">
+        <img
+          :src="'/assets/logos/' + providerDetails.logo"
+          :alt="providerDetails.name"
+          class="provider-logo"
+        />
+        <p><strong>{{ providerDetails.name }}</strong></p>
+        <p>{{ providerDetails.description }}</p>
+        <p>Base Cost: ${{ providerDetails.baseCost }}</p>
+        <p>Delivery: {{ providerDetails.minDeliveryDays }}-{{ providerDetails.maxDeliveryDays }} days</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
 
         <!-- Additional Info Section -->
         <div class="form-section full-width">
@@ -139,11 +177,31 @@
         <!-- Image Upload Section -->
         <div class="form-section full-width">
           <h3 class="section-title">Product Images</h3>
-          <div class="upload-container">
-            <input type="file" @change="handleFileUpload" id="file-upload" class="file-input" />
+          <div class="upload-container" :class="{ 'has-image': product.image }">
+            <input 
+              type="file" 
+              @change="handleFileUpload" 
+              id="file-upload" 
+              class="file-input"
+              accept="image/*"
+            />
             <label for="file-upload" class="upload-label">
-              <span class="upload-icon">+</span>
-              <span>Choose Image</span>
+              <template v-if="!product.image">
+                <span class="upload-icon">+</span>
+                <span>Choose Image</span>
+                <span class="upload-hint">Max size: 5MB</span>
+              </template>
+              <template v-else>
+                <img 
+                  :src="imagePreviewUrl" 
+                  class="preview-image" 
+                  alt="Preview"
+                />
+                <span class="image-name">{{ product.image.name }}</span>
+                <button type="button" class="remove-image" @click="removeImage">
+                  Remove Image
+                </button>
+              </template>
             </label>
           </div>
         </div>
@@ -158,186 +216,176 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import * as Yup from "yup";
 import fetchCategories from "@/api/categories";
 import fetchSubCategories from "@/api/subcategories"; 
 import fetchAttributeDefinitionsBySubCategory from "@/api/attributeDefinition";
 import fetchAttributeValuesByDefinitionId from "@/api/attributeValue";
-import DynamicInput from '@/pages/ProductManagement/DynamicInput.vue'
-
+import fetchShippingProviders from '@/api/shippingProviders';
+import { createProduct } from "@/api/product";
+import DynamicInput from '@/pages/ProductManagement/DynamicInput.vue';
 
 const product = ref({
   name: "",
-  category: { id: null },
-  subCategory: { id: null },
-  rating: null,
   description: "",
   originalPrice: null,
   currentPrice: null,
-  discountPrice: null,
-  discountPercent: null,
+  categoryId: null,
+  subCategoryId: null,
+  rating: null,
   tag: "",
   sku: "",
   brand: "",
   availability: true,
+  discountPrice: null,
+  discountPercent: null,
+  additionalInformation: "",
   attributes: [],
   shippingInfo: [],
-  additionalInformation: "",
+  image: null
 });
 
 const categories = ref([]);
 const subCategories = ref([]);
 const attributeDefinitions = ref([]);
 const attributeValues = ref({});
-const attributeOptions = ref({})
-
-
+const attributeOptions = ref({});
+const shippingProviders = ref([]);
 const selectedShippingOption = ref("");
 
-
-const fetchAllCategories = async () => {
-  try {
-    const data = await fetchCategories();
-    categories.value = data.categories || data;
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-  }
-};
-
-
-watch(
-  () => product.value.category.id,
-  async (newCategoryId) => {
-    if (newCategoryId) {
-      try {
-        const subCategoryData = await fetchSubCategories(newCategoryId);
-        subCategories.value = Array.isArray(subCategoryData) ? subCategoryData : subCategoryData.subCategories || [];
-        product.value.subCategory.id = null;
-      } catch (error) {
-        console.error("Error fetching subcategories:", error);
-      }
-    } else {
-      subCategories.value = [];
-      product.value.subCategory.id = null;
-    }
-  }
-);
-
-watch(
-  () => product.value.subCategory.id,
-  async (newSubCategoryId) => {
-    if (newSubCategoryId) {
-      try {
-        const attributesData = await fetchAttributeDefinitionsBySubCategory(newSubCategoryId);
-        attributeDefinitions.value = attributesData;
-
-        // Clear existing options
-        attributeOptions.value = {};
-        attributeValues.value = {};
-
-        for (const attribute of attributesData) {
-          const values = await fetchAttributeValuesByDefinitionId(attribute.id);
-          console.log(`Attribute ${attribute.id} values:`, values);
-          
-          const mappedOptions = values.map(value => ({
-            id: value.id,
-            label: value.value,
-            value: value.value,
-          }));
-          
-          attributeOptions.value = Object.assign({}, attributeOptions.value, {
-            [attribute.id]: mappedOptions
-          });
-          
-          // Initialize with empty string for SELECT, null for NUMBER
-          const initialValue = attribute.inputType === 'NUMBER' ? null : '';
-          attributeValues.value = Object.assign({}, attributeValues.value, {
-            [attribute.id]: initialValue
-          });
-        }
-
-        // Update product attributes
-        product.value.attributes = Object.keys(attributeValues.value).map(attrId => ({
-          attributeDefinitionId: parseInt(attrId),
-          value: attributeValues.value[attrId]
-        }));
-
-      } catch (error) {
-        console.error("Error fetching attribute definitions:", error);
-      }
-    } else {
-      attributeDefinitions.value = [];
-      attributeValues.value = {};
-      attributeOptions.value = {};
-    }
-  }
-);
-
-// Add a watch for attributeValues changes
-watch(attributeValues, (newValues) => {
-  console.log('Attribute values changed:', newValues);
-  // Update product attributes whenever values change
-  product.value.attributes = Object.keys(newValues).map(attrId => ({
-    attributeDefinitionId: parseInt(attrId),
-    value: newValues[attrId]
-  }));
-}, { deep: true });
-
-onMounted(() => {
-  fetchAllCategories();
+// Computed Properties
+const imagePreviewUrl = computed(() => {
+  return product.value.image ? URL.createObjectURL(product.value.image) : '';
 });
 
-const validationSchema = Yup.object({
-  name: Yup.string().required("Product Name is required."),
-  category: Yup.object().shape({
-    id: Yup.number().required("Category is required."),
-  }),
-  subCategory: Yup.object().shape({
-    id: Yup.number().required("SubCategory is required."),
-  }),
-  rating: Yup.number()
-    .min(0, "Rating must be at least 0.")
-    .max(5, "Rating must be at most 5.")
-    .required("Rating is required."),
-  sku: Yup.string().required("SKU is required."),
-  originalPrice: Yup.number()
-    .positive("Original Price must be a positive number.")
-    .required("Original Price is required."),
-  currentPrice: Yup.number()
-    .positive("Current Price must be a positive number.")
-    .max(Yup.ref("originalPrice"), "Current Price cannot be more than Original Price.")
-    .required("Current Price is required."),
-  description: Yup.string().required("Description is required."),
+const providerDetails = computed(() => {
+  if (!selectedShippingOption.value) return null;
+  return shippingProviders.value.find(
+    provider => provider.name === selectedShippingOption.value
+  );
 });
 
-const submitForm = async () => {
+// Form submission
+const submitForm = async function() {
   try {
-    await validationSchema.validate(product.value, { abortEarly: false });
-    product.value.attributes = Object.keys(attributeValues.value).map(attrId => ({
-  attributeDefinitionId: parseInt(attrId),
-  value: attributeValues.value[attrId],
-}));
+    // Validate required fields
+    if (!product.value.name || !product.value.categoryId || !product.value.subCategoryId) {
+      alert('Please fill in all required fields');
+      throw new Error('Missing required fields');
+    }
 
-    console.log("Form submitted successfully with product data:", product.value);
+    // Validate image
+    if (!product.value.image) {
+      alert('Please select an image');
+      throw new Error('Missing image');
+    }
+
+    // Format the product data
+    const formattedProduct = {
+      name: product.value.name,
+      description: product.value.description,
+      originalPrice: Number(product.value.originalPrice),
+      currentPrice: Number(product.value.currentPrice),
+      categoryId: Number(product.value.categoryId),
+      subCategoryId: Number(product.value.subCategoryId),
+      rating: Number(product.value.rating),
+      tag: product.value.tag,
+      sku: product.value.sku,
+      brand: product.value.brand,
+      availability: product.value.availability,
+      discountPrice: Number(product.value.discountPrice) || null,
+      discountPercent: Number(product.value.discountPercent) || null,
+      additionalInformation: product.value.additionalInformation,
+      attributes: Object.values(attributeValues.value)
+        .filter(attr => attr.value !== "" && attr.attributeValueId)
+        .map(attr => ({
+          attributeDefinitionId: Number(attr.attributeDefinitionId),
+          attributeValueId: Number(attr.attributeValueId),
+          value: attr.value
+        })),
+      shippingInfo: product.value.shippingInfo.map(info => ({
+        shippingMethod: info,
+        shippingProviderId: Number(shippingProviders.value.find(p => p.name === info)?.id || 1),
+        weight: 0.5,
+        shippingTime: "5-7 business days"
+      }))
+    };
+
+    // Create FormData
+    const formData = new FormData();
+    formData.append('product', new Blob([JSON.stringify(formattedProduct)], {
+      type: 'application/json'
+    }));
+    formData.append('image', product.value.image);
+
+    // Call the API
+    const createdProduct = await createProduct(formData);
+    console.log("Product created successfully:", createdProduct);
+
+    // Reset form on success
+    resetForm();
+
+    return createdProduct;
+
   } catch (err) {
-    const errors = {};
-    err.inner.forEach((e) => {
-      errors[e.path] = e.message;
-    });
-    console.error("Validation errors:", errors);
+    console.error("Error submitting form:", err);
+    alert('Error creating product: ' + (err.message || 'Please try again.'));
+    throw err;
   }
 };
 
-
-const addAttributeValue = (attributeId, value) => {
-  if (value) {
-    attributeValues.value[attributeId] = value;
+// File handling
+const handleFileUpload = function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    // Validate file type
+    if (!file.type.match('image.*')) {
+      alert('Please select an image file');
+      event.target.value = ''; // Clear the input
+      return;
+    }
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size should not exceed 5MB');
+      event.target.value = ''; // Clear the input
+      return;
+    }
+    product.value.image = file;
+    console.log('Image file selected:', file.name, file.type, file.size);
   }
 };
 
-const removeAttributeValue = (attributeId) => {
-  delete attributeValues.value[attributeId];
+const removeImage = () => {
+  product.value.image = null;
+  const fileInput = document.getElementById('file-upload');
+  if (fileInput) {
+    fileInput.value = '';
+  }
+};
+
+const resetForm = () => {
+  product.value = {
+    name: "",
+    description: "",
+    originalPrice: null,
+    currentPrice: null,
+    categoryId: null,
+    subCategoryId: null,
+    rating: null,
+    tag: "",
+    sku: "",
+    brand: "",
+    availability: true,
+    discountPrice: null,
+    discountPercent: null,
+    additionalInformation: "",
+    attributes: [],
+    shippingInfo: [],
+    image: null
+  };
+  attributeValues.value = {};
+  attributeOptions.value = {};
 };
 
 const addShippingInfo = () => {
@@ -348,15 +396,134 @@ const addShippingInfo = () => {
 };
 
 const removeShippingInfo = (option) => {
-  product.value.shippingInfo = product.value.shippingInfo.filter((o) => o !== option);
+  product.value.shippingInfo = product.value.shippingInfo.filter(o => o !== option);
 };
 
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    product.value.image = file; 
+// Initialize data on mount
+onMounted(async () => {
+  try {
+    const [categoriesData, providersData] = await Promise.all([
+      fetchCategories(),
+      fetchShippingProviders()
+    ]);
+    categories.value = categoriesData.categories || categoriesData;
+    shippingProviders.value = providersData.filter(provider => provider.isActive);
+  } catch (error) {
+    console.error("Error during initialization:", error);
+  }
+});
+
+const updateAttributeValue = (attributeId, value, selectedOption) => {
+  console.log('Updating attribute value:', { attributeId, value, selectedOption });
+  if (attributeValues.value[attributeId]) {
+    attributeValues.value[attributeId] = {
+      ...attributeValues.value[attributeId],
+      value: value,
+      attributeValueId: selectedOption?.attributeValueId
+    };
+    console.log('Updated attributeValues:', attributeValues.value);
   }
 };
+
+// Watch for category changes
+watch(
+  () => product.value.categoryId,
+  async (newCategoryId) => {
+    if (newCategoryId) {
+      try {
+        const response = await fetchSubCategories(newCategoryId);
+        // Handle both array and object response formats
+        subCategories.value = Array.isArray(response) 
+          ? response 
+          : response.subCategories || [];
+        
+        // Reset subcategory selection when category changes
+        product.value.subCategoryId = null;
+        // Also reset attributes when category changes
+        attributeDefinitions.value = [];
+        attributeValues.value = {};
+        attributeOptions.value = {};
+      } catch (error) {
+        console.error("Error fetching subcategories:", error);
+        subCategories.value = [];
+      }
+    } else {
+      subCategories.value = [];
+      product.value.subCategoryId = null;
+    }
+  }
+);
+
+// Watch for subcategory changes
+watch(
+  () => product.value.subCategoryId,
+  async (newSubCategoryId) => {
+    if (newSubCategoryId) {
+      try {
+        // Fetch attribute definitions
+        const definitions = await fetchAttributeDefinitionsBySubCategory(newSubCategoryId);
+        attributeDefinitions.value = Array.isArray(definitions) ? definitions : [];
+        console.log('Fetched attribute definitions:', attributeDefinitions.value);
+
+        // Clear existing attribute data
+        attributeOptions.value = {};
+        attributeValues.value = {};
+
+        // Fetch values for each attribute definition
+        await Promise.all(attributeDefinitions.value.map(async (attribute) => {
+          try {
+            const values = await fetchAttributeValuesByDefinitionId(attribute.id);
+            console.log(`Fetched values for attribute ${attribute.id}:`, values);
+            
+            if (Array.isArray(values)) {
+              // Map the values to the expected format
+              const mappedOptions = values.map(value => ({
+                id: value.id,
+                label: value.value,
+                value: value.value,
+                attributeValueId: value.id
+              }));
+              
+              // Update options
+              attributeOptions.value[attribute.id] = mappedOptions;
+              
+              // Initialize the attribute value
+              attributeValues.value[attribute.id] = {
+                attributeDefinitionId: attribute.id,
+                name: attribute.name,
+                attributeValueId: null,
+                value: ""
+              };
+            }
+          } catch (error) {
+            console.error(`Error fetching values for attribute ${attribute.id}:`, error);
+          }
+        }));
+      } catch (error) {
+        console.error("Error fetching attribute definitions:", error);
+        attributeDefinitions.value = [];
+        attributeValues.value = {};
+        attributeOptions.value = {};
+      }
+    } else {
+      attributeDefinitions.value = [];
+      attributeValues.value = {};
+      attributeOptions.value = {};
+    }
+  }
+);
+
+// Watch for attributeValues changes
+watch(attributeValues, (newValues) => {
+  console.log('Attribute values changed:', newValues);
+  product.value.attributes = Object.entries(newValues)
+    .filter(([_, attr]) => attr.value !== "" && attr.attributeValueId)
+    .map(([id, attr]) => ({
+      attributeDefinitionId: Number(id),
+      attributeValueId: Number(attr.attributeValueId),
+      value: attr.value
+    }));
+}, { deep: true });
 </script>
 
 
@@ -483,6 +650,17 @@ input:focus, select:focus, textarea:focus {
   padding: 2rem;
   text-align: center;
   transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-container:hover {
+  border-color: #d64545;
+  background-color: #fff5f5;
+}
+
+.upload-container.has-image {
+  border-style: solid;
+  background-color: #fff5f5;
 }
 
 .file-input {
@@ -499,8 +677,44 @@ input:focus, select:focus, textarea:focus {
 }
 
 .upload-icon {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 200;
+}
+
+.upload-hint {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.preview-image {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-name {
+  font-size: 0.9rem;
+  color: #333;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove-image {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s ease;
+}
+
+.remove-image:hover {
+  background: #e63946;
 }
 
 .submit-btn {
@@ -521,6 +735,26 @@ input:focus, select:focus, textarea:focus {
   transform: translateY(-1px);
   box-shadow: 0 4px 15px rgba(238, 88, 88, 0.2);
 }
+
+.shipping-select {
+  padding: 8px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.provider-card {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff6f1;
+}
+
+.provider-logo {
+  max-width: 80px;
+  margin-bottom: 8px;
+}
+
 
 /* Responsive Design */
 @media (max-width: 1200px) {

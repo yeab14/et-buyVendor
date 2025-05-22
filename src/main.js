@@ -12,7 +12,7 @@ import "./registerServiceWorker";
 
 Vue.use(VueRouter);
 Vue.use(LightBootstrap);
-Vue.use(BootstrapVue); 
+Vue.use(BootstrapVue);
 
 const router = new VueRouter({
   routes,
