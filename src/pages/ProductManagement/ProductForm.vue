@@ -215,8 +215,7 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, watch, computed } from "vue";
+<script>
 import * as Yup from "yup";
 import fetchCategories from "@/api/categories";
 import fetchSubCategories from "@/api/subcategories"; 
@@ -226,304 +225,327 @@ import fetchShippingProviders from '@/api/shippingProviders';
 import { createProduct } from "@/api/product";
 import DynamicInput from '@/pages/ProductManagement/DynamicInput.vue';
 
-const product = ref({
-  name: "",
-  description: "",
-  originalPrice: null,
-  currentPrice: null,
-  categoryId: null,
-  subCategoryId: null,
-  rating: null,
-  tag: "",
-  sku: "",
-  brand: "",
-  availability: true,
-  discountPrice: null,
-  discountPercent: null,
-  additionalInformation: "",
-  attributes: [],
-  shippingInfo: [],
-  image: null
-});
+export default {
+  name: 'ProductForm',
+  
+  components: {
+    DynamicInput
+  },
 
-const categories = ref([]);
-const subCategories = ref([]);
-const attributeDefinitions = ref([]);
-const attributeValues = ref({});
-const attributeOptions = ref({});
-const shippingProviders = ref([]);
-const selectedShippingOption = ref("");
-
-// Computed Properties
-const imagePreviewUrl = computed(() => {
-  return product.value.image ? URL.createObjectURL(product.value.image) : '';
-});
-
-const providerDetails = computed(() => {
-  if (!selectedShippingOption.value) return null;
-  return shippingProviders.value.find(
-    provider => provider.name === selectedShippingOption.value
-  );
-});
-
-// Form submission
-const submitForm = async function() {
-  try {
-    // Validate required fields
-    if (!product.value.name || !product.value.categoryId || !product.value.subCategoryId) {
-      alert('Please fill in all required fields');
-      throw new Error('Missing required fields');
-    }
-
-    // Validate image
-    if (!product.value.image) {
-      alert('Please select an image');
-      throw new Error('Missing image');
-    }
-
-    // Format the product data
-    const formattedProduct = {
-      name: product.value.name,
-      description: product.value.description,
-      originalPrice: Number(product.value.originalPrice),
-      currentPrice: Number(product.value.currentPrice),
-      categoryId: Number(product.value.categoryId),
-      subCategoryId: Number(product.value.subCategoryId),
-      rating: Number(product.value.rating),
-      tag: product.value.tag,
-      sku: product.value.sku,
-      brand: product.value.brand,
-      availability: product.value.availability,
-      discountPrice: Number(product.value.discountPrice) || null,
-      discountPercent: Number(product.value.discountPercent) || null,
-      additionalInformation: product.value.additionalInformation,
-      attributes: Object.values(attributeValues.value)
-        .filter(attr => attr.value !== "" && attr.attributeValueId)
-        .map(attr => ({
-          attributeDefinitionId: Number(attr.attributeDefinitionId),
-          attributeValueId: Number(attr.attributeValueId),
-          value: attr.value
-        })),
-      shippingInfo: product.value.shippingInfo.map(info => ({
-        shippingMethod: info,
-        shippingProviderId: Number(shippingProviders.value.find(p => p.name === info)?.id || 1),
-        weight: 0.5,
-        shippingTime: "5-7 business days"
-      }))
+  data() {
+    return {
+      product: {
+        name: "",
+        description: "",
+        originalPrice: null,
+        currentPrice: null,
+        categoryId: null,
+        subCategoryId: null,
+        rating: null,
+        tag: "",
+        sku: "",
+        brand: "",
+        availability: true,
+        discountPrice: null,
+        discountPercent: null,
+        additionalInformation: "",
+        attributes: [],
+        shippingInfo: [],
+        image: null
+      },
+      categories: [],
+      subCategories: [],
+      attributeDefinitions: [],
+      attributeValues: {},
+      attributeOptions: {},
+      shippingProviders: [],
+      selectedShippingOption: ""
     };
+  },
 
-    // Create FormData
-    const formData = new FormData();
-    formData.append('product', new Blob([JSON.stringify(formattedProduct)], {
-      type: 'application/json'
-    }));
-    formData.append('image', product.value.image);
+  computed: {
+    imagePreviewUrl() {
+      return this.product.image ? URL.createObjectURL(this.product.image) : '';
+    },
 
-    // Call the API
-    const createdProduct = await createProduct(formData);
-    console.log("Product created successfully:", createdProduct);
-
-    // Reset form on success
-    resetForm();
-
-    return createdProduct;
-
-  } catch (err) {
-    console.error("Error submitting form:", err);
-    alert('Error creating product: ' + (err.message || 'Please try again.'));
-    throw err;
-  }
-};
-
-// File handling
-const handleFileUpload = function(event) {
-  const file = event.target.files[0];
-  if (file) {
-    // Validate file type
-    if (!file.type.match('image.*')) {
-      alert('Please select an image file');
-      event.target.value = ''; // Clear the input
-      return;
+    providerDetails() {
+      if (!this.selectedShippingOption) return null;
+      return this.shippingProviders.find(
+        provider => provider.name === this.selectedShippingOption
+      );
     }
-    // Validate file size (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size should not exceed 5MB');
-      event.target.value = ''; // Clear the input
-      return;
-    }
-    product.value.image = file;
-    console.log('Image file selected:', file.name, file.type, file.size);
-  }
-};
+  },
 
-const removeImage = () => {
-  product.value.image = null;
-  const fileInput = document.getElementById('file-upload');
-  if (fileInput) {
-    fileInput.value = '';
-  }
-};
-
-const resetForm = () => {
-  product.value = {
-    name: "",
-    description: "",
-    originalPrice: null,
-    currentPrice: null,
-    categoryId: null,
-    subCategoryId: null,
-    rating: null,
-    tag: "",
-    sku: "",
-    brand: "",
-    availability: true,
-    discountPrice: null,
-    discountPercent: null,
-    additionalInformation: "",
-    attributes: [],
-    shippingInfo: [],
-    image: null
-  };
-  attributeValues.value = {};
-  attributeOptions.value = {};
-};
-
-const addShippingInfo = () => {
-  if (selectedShippingOption.value && !product.value.shippingInfo.includes(selectedShippingOption.value)) {
-    product.value.shippingInfo.push(selectedShippingOption.value);
-    selectedShippingOption.value = "";
-  }
-};
-
-const removeShippingInfo = (option) => {
-  product.value.shippingInfo = product.value.shippingInfo.filter(o => o !== option);
-};
-
-// Initialize data on mount
-onMounted(async () => {
-  try {
-    const [categoriesData, providersData] = await Promise.all([
-      fetchCategories(),
-      fetchShippingProviders()
-    ]);
-    categories.value = categoriesData.categories || categoriesData;
-    shippingProviders.value = providersData.filter(provider => provider.isActive);
-  } catch (error) {
-    console.error("Error during initialization:", error);
-  }
-});
-
-const updateAttributeValue = (attributeId, value, selectedOption) => {
-  console.log('Updating attribute value:', { attributeId, value, selectedOption });
-  if (attributeValues.value[attributeId]) {
-    attributeValues.value[attributeId] = {
-      ...attributeValues.value[attributeId],
-      value: value,
-      attributeValueId: selectedOption?.attributeValueId
-    };
-    console.log('Updated attributeValues:', attributeValues.value);
-  }
-};
-
-// Watch for category changes
-watch(
-  () => product.value.categoryId,
-  async (newCategoryId) => {
-    if (newCategoryId) {
-      try {
-        const response = await fetchSubCategories(newCategoryId);
-        // Handle both array and object response formats
-        subCategories.value = Array.isArray(response) 
-          ? response 
-          : response.subCategories || [];
-        
-        // Reset subcategory selection when category changes
-        product.value.subCategoryId = null;
-        // Also reset attributes when category changes
-        attributeDefinitions.value = [];
-        attributeValues.value = {};
-        attributeOptions.value = {};
-      } catch (error) {
-        console.error("Error fetching subcategories:", error);
-        subCategories.value = [];
-      }
-    } else {
-      subCategories.value = [];
-      product.value.subCategoryId = null;
-    }
-  }
-);
-
-// Watch for subcategory changes
-watch(
-  () => product.value.subCategoryId,
-  async (newSubCategoryId) => {
-    if (newSubCategoryId) {
-      try {
-        // Fetch attribute definitions
-        const definitions = await fetchAttributeDefinitionsBySubCategory(newSubCategoryId);
-        attributeDefinitions.value = Array.isArray(definitions) ? definitions : [];
-        console.log('Fetched attribute definitions:', attributeDefinitions.value);
-
-        // Clear existing attribute data
-        attributeOptions.value = {};
-        attributeValues.value = {};
-
-        // Fetch values for each attribute definition
-        await Promise.all(attributeDefinitions.value.map(async (attribute) => {
+  watch: {
+    'product.categoryId': {
+      async handler(newCategoryId) {
+        if (newCategoryId) {
           try {
-            const values = await fetchAttributeValuesByDefinitionId(attribute.id);
-            console.log(`Fetched values for attribute ${attribute.id}:`, values);
+            const response = await fetchSubCategories(newCategoryId);
+            this.subCategories = Array.isArray(response) 
+              ? response 
+              : response.subCategories || [];
             
-            if (Array.isArray(values)) {
-              // Map the values to the expected format
-              const mappedOptions = values.map(value => ({
-                id: value.id,
-                label: value.value,
-                value: value.value,
-                attributeValueId: value.id
-              }));
-              
-              // Update options
-              attributeOptions.value[attribute.id] = mappedOptions;
-              
-              // Initialize the attribute value
-              attributeValues.value[attribute.id] = {
-                attributeDefinitionId: attribute.id,
-                name: attribute.name,
-                attributeValueId: null,
-                value: ""
-              };
-            }
+            this.product.subCategoryId = null;
+            this.attributeDefinitions = [];
+            this.attributeValues = {};
+            this.attributeOptions = {};
           } catch (error) {
-            console.error(`Error fetching values for attribute ${attribute.id}:`, error);
+            console.error("Error fetching subcategories:", error);
+            this.subCategories = [];
           }
-        }));
-      } catch (error) {
-        console.error("Error fetching attribute definitions:", error);
-        attributeDefinitions.value = [];
-        attributeValues.value = {};
-        attributeOptions.value = {};
+        } else {
+          this.subCategories = [];
+          this.product.subCategoryId = null;
+        }
       }
-    } else {
-      attributeDefinitions.value = [];
-      attributeValues.value = {};
-      attributeOptions.value = {};
+    },
+
+    'product.subCategoryId': {
+      async handler(newSubCategoryId) {
+        if (newSubCategoryId) {
+          try {
+            const definitions = await fetchAttributeDefinitionsBySubCategory(newSubCategoryId);
+            this.attributeDefinitions = Array.isArray(definitions) ? definitions : [];
+            
+            this.attributeOptions = {};
+            this.attributeValues = {};
+
+            await Promise.all(this.attributeDefinitions.map(async (attribute) => {
+              try {
+                const values = await fetchAttributeValuesByDefinitionId(attribute.id);
+                
+                if (Array.isArray(values)) {
+                  const mappedOptions = values.map(value => ({
+                    id: value.id,
+                    label: value.value,
+                    value: value.value,
+                    attributeValueId: value.id
+                  }));
+                  
+                  this.$set(this.attributeOptions, attribute.id, mappedOptions);
+                  this.$set(this.attributeValues, attribute.id, {
+                    attributeDefinitionId: attribute.id,
+                    name: attribute.name,
+                    attributeValueId: null,
+                    value: ""
+                  });
+                }
+              } catch (error) {
+                console.error(`Error fetching values for attribute ${attribute.id}:`, error);
+              }
+            }));
+          } catch (error) {
+            console.error("Error fetching attribute definitions:", error);
+            this.attributeDefinitions = [];
+            this.attributeValues = {};
+            this.attributeOptions = {};
+          }
+        } else {
+          this.attributeDefinitions = [];
+          this.attributeValues = {};
+          this.attributeOptions = {};
+        }
+      }
+    },
+
+    attributeValues: {
+      handler(newValues) {
+        this.product.attributes = Object.entries(newValues)
+          .filter(([_, attr]) => attr.value !== "" && attr.attributeValueId)
+          .map(([id, attr]) => ({
+            attributeDefinitionId: Number(id),
+            attributeValueId: Number(attr.attributeValueId),
+            value: attr.value
+          }));
+      },
+      deep: true
     }
+  },
+
+  async mounted() {
+    try {
+      const [categoriesData, providersData] = await Promise.all([
+        fetchCategories(),
+        fetchShippingProviders()
+      ]);
+      this.categories = categoriesData.categories || categoriesData;
+      this.shippingProviders = providersData.filter(provider => provider.isActive);
+    } catch (error) {
+      console.error("Error during initialization:", error);
+    }
+  },
+
+  methods: {
+    async submitForm() {
+      try {
+        if (!this.product.name || !this.product.categoryId || !this.product.subCategoryId) {
+          this.$bvToast.toast('Please fill in all required fields', {
+            title: 'Validation Error',
+            variant: 'danger',
+            solid: true
+          });
+          throw new Error('Missing required fields');
+        }
+
+        if (!this.product.image) {
+          this.$bvToast.toast('Please select an image', {
+            title: 'Validation Error',
+            variant: 'danger',
+            solid: true
+          });
+          throw new Error('Missing image');
+        }
+
+        const formattedProduct = {
+          name: this.product.name,
+          description: this.product.description,
+          originalPrice: Number(this.product.originalPrice),
+          currentPrice: Number(this.product.currentPrice),
+          categoryId: Number(this.product.categoryId),
+          subCategoryId: Number(this.product.subCategoryId),
+          rating: Number(this.product.rating),
+          tag: this.product.tag,
+          sku: this.product.sku,
+          brand: this.product.brand,
+          availability: this.product.availability,
+          discountPrice: Number(this.product.discountPrice) || null,
+          discountPercent: Number(this.product.discountPercent) || null,
+          additionalInformation: this.product.additionalInformation,
+          attributes: Object.values(this.attributeValues)
+            .filter(attr => attr.value !== "" && attr.attributeValueId)
+            .map(attr => ({
+              attributeDefinitionId: Number(attr.attributeDefinitionId),
+              attributeValueId: Number(attr.attributeValueId),
+              value: attr.value
+            })),
+          shippingInfo: this.product.shippingInfo.map(info => ({
+            shippingMethod: info,
+            shippingProviderId: Number(this.shippingProviders.find(p => p.name === info)?.id || 1),
+            weight: 0.5,
+            shippingTime: "5-7 business days"
+          }))
+        };
+
+        const formData = new FormData();
+        formData.append('product', new Blob([JSON.stringify(formattedProduct)], {
+          type: 'application/json'
+        }));
+        formData.append('image', this.product.image);
+
+        const createdProduct = await createProduct(formData);
+        
+        // Show success toast
+        this.$bvToast.toast(
+  '🎉 Fantastic! Your product has been successfully added to your EtBuy store. 🚀 You’re one step closer to boosting your sales and reaching more customers. Keep up the great work — your entrepreneurial journey is just getting started! 💼✨',
+  {
+    title: '✅ Product Created — Let’s Grow Your Business!',
+    variant: 'success',
+    solid: true,
+    autoHideDelay: 6000,
+    toaster: 'b-toaster-top-right',
   }
 );
 
-// Watch for attributeValues changes
-watch(attributeValues, (newValues) => {
-  console.log('Attribute values changed:', newValues);
-  product.value.attributes = Object.entries(newValues)
-    .filter(([_, attr]) => attr.value !== "" && attr.attributeValueId)
-    .map(([id, attr]) => ({
-      attributeDefinitionId: Number(id),
-      attributeValueId: Number(attr.attributeValueId),
-      value: attr.value
-    }));
-}, { deep: true });
+
+        this.resetForm();
+        return createdProduct;
+
+      } catch (err) {
+        console.error("Error submitting form:", err);
+        this.$bvToast.toast(
+          'Error creating product: ' + (err.message || 'Please try again.'),
+          {
+            title: 'Error',
+            variant: 'danger',
+            solid: true,
+            autoHideDelay: 5000,
+            toaster: 'b-toaster-top-right',
+          }
+        );
+        throw err;
+      }
+    },
+
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (!file.type.match('image.*')) {
+          this.$bvToast.toast('Please select an image file', {
+            title: 'Invalid File',
+            variant: 'warning',
+            solid: true
+          });
+          event.target.value = '';
+          return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          this.$bvToast.toast('File size should not exceed 5MB', {
+            title: 'File Too Large',
+            variant: 'warning',
+            solid: true
+          });
+          event.target.value = '';
+          return;
+        }
+        this.product.image = file;
+      }
+    },
+
+    removeImage() {
+      this.product.image = null;
+      const fileInput = document.getElementById('file-upload');
+      if (fileInput) {
+        fileInput.value = '';
+      }
+    },
+
+    resetForm() {
+      this.product = {
+        name: "",
+        description: "",
+        originalPrice: null,
+        currentPrice: null,
+        categoryId: null,
+        subCategoryId: null,
+        rating: null,
+        tag: "",
+        sku: "",
+        brand: "",
+        availability: true,
+        discountPrice: null,
+        discountPercent: null,
+        additionalInformation: "",
+        attributes: [],
+        shippingInfo: [],
+        image: null
+      };
+      this.attributeValues = {};
+      this.attributeOptions = {};
+    },
+
+    addShippingInfo() {
+      if (this.selectedShippingOption && !this.product.shippingInfo.includes(this.selectedShippingOption)) {
+        this.product.shippingInfo.push(this.selectedShippingOption);
+        this.selectedShippingOption = "";
+      }
+    },
+
+    removeShippingInfo(option) {
+      this.product.shippingInfo = this.product.shippingInfo.filter(o => o !== option);
+    },
+
+    updateAttributeValue(attributeId, value, selectedOption) {
+      if (this.attributeValues[attributeId]) {
+        this.$set(this.attributeValues, attributeId, {
+          ...this.attributeValues[attributeId],
+          value: value,
+          attributeValueId: selectedOption?.attributeValueId
+        });
+      }
+    }
+  }
+};
 </script>
 
 
