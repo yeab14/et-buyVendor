@@ -30,10 +30,6 @@
       <div v-if="products.length === 0" class="no-products">
         <i class="fas fa-box-open"></i>
         <p>No products found</p>
-        <button class="add-product-btn">
-          <i class="fas fa-plus"></i>
-          Add Your First Product
-        </button>
       </div>
 
       <div v-else v-for="product in products" :key="product.id" class="product-card">
@@ -51,7 +47,7 @@
         
         <div class="product-info">
           <h3 class="product-name">{{ product.name }}</h3>
-          <p class="product-brand">{{ product.brand }}</p>
+          <p class="product-brand">{{ product.description }}</p>
           
           <div class="product-rating">
             <div class="stars">
@@ -84,7 +80,7 @@
           </button>
           <button class="action-btn view">
             <i class="fas fa-eye"></i>
-            View Details
+            Details
           </button>
         </div>
       </div>
@@ -405,6 +401,7 @@ export default {
 
 .action-btn.edit {
   background: rgba(238, 88, 88, 0.1);
+  margin-left:-1vh;
   color: #ee5858;
 }
 

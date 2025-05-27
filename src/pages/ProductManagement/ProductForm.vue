@@ -437,15 +437,16 @@ export default {
         
         // Show success toast
         this.$bvToast.toast(
-  '🎉 Fantastic! Your product has been successfully added to your EtBuy store. 🚀 You’re one step closer to boosting your sales and reaching more customers. Keep up the great work — your entrepreneurial journey is just getting started! 💼✨',
+  '🎉 Success! Your product is now live on EtBuy. 🚀 Keep going — your journey to more sales and greater reach starts here! 💼',
   {
-    title: '✅ Product Created — Let’s Grow Your Business!',
+    title: '✅ Product Added Successfully!',
     variant: 'success',
     solid: true,
-    autoHideDelay: 6000,
+    autoHideDelay: 5000,
     toaster: 'b-toaster-top-right',
   }
 );
+
 
 
         this.resetForm();
