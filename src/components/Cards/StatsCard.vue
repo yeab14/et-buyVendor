@@ -1,32 +1,30 @@
 <template>
-  <card class="card-stats">
-    <div class="row">
-      <div class="col-5" v-if="$slots.header">
-        <div class="icon-big text-center">
-          <slot name="header"></slot>
-        </div>
-      </div>
-      <div class="col-7" v-if="$slots.content">
-        <div class="numbers">
-          <slot name="content"></slot>
-        </div>
+  <div class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between">
+    <div class="flex items-center space-x-3">
+      <i :class="icon + ' text-red-600 text-xl'"></i>
+      <div>
+        <p class="text-sm text-gray-500">{{ label }}</p>
+        <p class="text-2xl font-bold">{{ formattedValue }}</p>
       </div>
     </div>
-    <div slot="footer" class="stats" v-if="$slots.footer">
-      <slot name="footer"></slot>
+    <div class="mt-4">
+      <slot />
     </div>
-  </card>
+  </div>
 </template>
+
 <script>
-  import Card from './Card.vue'
-  export default {
-    name: 'stats-card',
-    components: {
-      Card
+export default {
+  name: 'StatCard',
+  props: {
+    icon: { type: String, required: true },
+    label: { type: String, required: true },
+    value: { required: true }
+  },
+  computed: {
+    formattedValue() {
+      return typeof this.value === 'number' ? this.value.toLocaleString() : this.value;
     }
   }
-
+};
 </script>
-<style>
-
-</style>

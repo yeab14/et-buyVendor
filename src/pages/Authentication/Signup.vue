@@ -1,82 +1,102 @@
 <template>
-  <div class="signup-wrapper">
-    <div class="signup-card">
-      <div class="left-section">
-        <div class="branding">
-          <img src="img/et-buy.png" alt="EtBuy Logo" class="logo" />
-          <h2>Welcome to EtBuy Vendor Sign-Up</h2>
-          <p>Start your journey with EtBuy and grow your business with ease!</p>
-        </div>
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12 font-public-sans">
+    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
+
+      <!-- Left Branding Panel -->
+      <div class="bg-gradient-to-br from-custom-etbuy-red-dark to-etbuy-red-darken text-etbuy-text-light font-public-sans flex flex-col items-center justify-center p-12 lg:p-16 text-center space-y-4">
+        <img src="img/et-buy.png" alt="EtBuy Logo" class="w-24 md:w-28 lg:w-32 mb-4 drop-shadow-lg" />
+        <h2 class="text-3xl md:text-4xl font-bold tracking-wide leading-snug drop-shadow-sm">
+          Join EtBuy as a Vendor
+        </h2>
+        <p class="text-sm md:text-base opacity-90 leading-relaxed max-w-xs md:max-w-sm">
+          Set up your store, showcase your products, and grow your business with EtBuy’s vendor platform.
+        </p>
       </div>
-      <div class="right-section">
-        <div class="form-container">
-          <form @submit.prevent="handleSubmit">
-            <div
-              class="input-group"
-              v-for="field in fields"
-              :key="field.name"
-              :class="{ 'has-error': errors[field.name] }"
-            >
-              <label :for="field.name" class="input-label">{{ field.placeholder }}</label>
-              
+
+      <!-- Right Form Panel -->
+      <div class="flex items-center justify-center p-10">
+        <div class="w-full max-w-sm">
+          <form @submit.prevent="handleSubmit" class="space-y-6">
+            <div v-for="field in fields" :key="field.name" class="space-y-1">
+              <label :for="field.name" class="block text-sm font-medium text-gray-700">
+                {{ field.placeholder }}
+              </label>
+
+              <!-- Normal Input -->
               <input
-                v-if="field.name !== 'password' && field.name !== 'confirmPassword'"
+                v-if="!['password', 'confirmPassword'].includes(field.name)"
                 v-model="vendor[field.name]"
                 :type="field.type"
                 :id="field.name"
+                :placeholder="field.placeholder"
+                class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-etbuy-red-dark focus:outline-none transition duration-200"
               />
 
-              <div v-if="field.name === 'password'">
-                <div class="password-input-wrapper">
-                  <input
-                    :type="showPassword ? 'text' : 'password'"
-                    v-model="vendor.password"
-                    id="password"
-                    class="password-field"
-                  />
-                  <img
-                    src="img/EyeOpen.jpg"
-                    alt="Show Password"
-                    class="eye-icon"
-                    @click="togglePassword('password')"
-                  />
-                </div>
-                <!-- <span v-if="errors.password" class="error">{{ errors.password }}</span> -->
+              <!-- Password -->
+              <div v-else-if="field.name === 'password'" class="relative">
+                <input
+                  :type="showPassword ? 'text' : 'password'"
+                  v-model="vendor.password"
+                  id="password"
+                  placeholder="Password"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-etbuy-red-dark focus:outline-none transition duration-200"
+                />
+                <img
+                  src="img/EyeOpen.jpg"
+                  alt="Show Password"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-70 hover:opacity-100 cursor-pointer transition"
+                  @click="togglePassword('password')"
+                />
               </div>
 
-              <div v-if="field.name === 'confirmPassword'">
-                <div class="password-input-wrapper">
-                  <input
-                    :type="showConfirmPassword ? 'text' : 'password'"
-                    v-model="vendor.confirmPassword"
-                    id="confirmPassword"
-                    class="password-field"
-                  />
-                  <img
-                    src="img/EyeOpen.jpg"
-                    alt="Show Password"
-                    class="eye-icon"
-                    @click="togglePassword('confirmPassword')"
-                  />
-                </div>
-                <!-- <span v-if="errors.confirmPassword" class="error">{{ errors.confirmPassword }}</span> -->
+              <!-- Confirm Password -->
+              <div v-else-if="field.name === 'confirmPassword'" class="relative">
+                <input
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  v-model="vendor.confirmPassword"
+                  id="confirmPassword"
+                  placeholder="Confirm Password"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-etbuy-red-dark focus:outline-none transition duration-200"
+                />
+                <img
+                  src="img/EyeOpen.jpg"
+                  alt="Show Password"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-70 hover:opacity-100 cursor-pointer transition"
+                  @click="togglePassword('confirmPassword')"
+                />
               </div>
 
-              <span v-if="errors[field.name]" class="error">{{ errors[field.name] }}</span>
+              <!-- Error Message -->
+              <span v-if="errors[field.name]" class="text-sm text-red-500">
+                {{ errors[field.name] }}
+              </span>
             </div>
 
-            <button type="submit" class="signup-btn" :disabled="loading">
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              :disabled="loading"
+              class="w-full py-3 bg-etbuy-red-dark hover:bg-etbuy-red-light text-white font-semibold rounded-md transition duration-200"
+            >
               {{ loading ? "Signing Up..." : "Sign Up" }}
             </button>
           </form>
-          <p class="login-link">
-            Already a vendor? <router-link to="/vendor/login"><strong>Sign in</strong></router-link> to manage your store and track your sales.
+
+          <!-- Login Redirect -->
+          <p class="text-center text-gray-600 text-sm mt-6">
+            Already a vendor?
+            <router-link to="/vendor/login" class="text-etbuy-red-dark hover:underline font-medium">
+              Sign in
+            </router-link>
+            to manage your store and track your sales.
           </p>
         </div>
       </div>
+
     </div>
   </div>
 </template>
+
 
 <script>
 import * as yup from "yup";
@@ -207,182 +227,3 @@ export default {
 
 
 
-<style scoped>
-.signup-wrapper {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  padding: 20px;
-}
-
-.signup-card {
-  display: flex;
-  margin-top:15vh;
-  width: 880px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-}
-
-.input-group {
-  margin-bottom: 10px;
-}
-
-.input-group.has-error {}
-
-.error {
-  color: red;
-  font-size: 12px;
-}
-
-.left-section {
-  width: 40%;
-  background: linear-gradient(135deg, #ee5858, #000);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 30px;
-}
-
-.branding .logo {
-  width: 120px;
-  margin-bottom: 15px;
-}
-
-.right-section {
-  width: 60%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-}
-
-.form-container {
-  width: 100%;
-  max-width: 360px;
-}
-
-h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  color: #fff;
-  letter-spacing: 1px;
-  margin-bottom: 20px;
-}
-
-h3 {
-  font-size: 22px;
-  font-weight: bold;
-  color: #ee5858;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  transition: 0.3s ease-in-out;
-}
-
-input + input {
-  margin-top: 8px;
-}
-
-input:focus {
-  border-color: #ee5858;
-  outline: none;
-  box-shadow: 0 0 5px rgba(238, 88, 88, 0.5);
-}
-
-.input-field {
-  width: 100%;
-  padding-right: 30vh;
-}
-
-input[type="password"], input[type="text"] {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  transition: 0.3s ease-in-out;
-}
-
-input[type="password"]:focus, input[type="text"]:focus {
-  border-color: #ee5858;
-  outline: none;
-  box-shadow: 0 0 5px rgba(238, 88, 88, 0.5);
-}
-
-.signup-btn {
-  width: 100%;
-  padding: 12px;
-  background: #ee5858;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.signup-btn:hover {
-  background: #c04a4a;
-}
-
-.login-link {
-  text-align: center;
-  margin-top: 15px;
-  color: #555;
-}
-
-.login-link a {
-  color: #ee5858;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.login-link a:hover {
-  text-decoration: underline;
-}
-
-.eye-icon {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-}
-
-.input-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 5px;
-  text-align: left;
-}
-
-.password-input-wrapper {
-  position: relative;
-}
-</style>

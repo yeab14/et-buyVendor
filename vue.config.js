@@ -3,6 +3,17 @@ const path = require('path');
 
 module.exports = {
   transpileDependencies: [],
+  
+  css: {
+    loaderOptions: {
+      postcss: {
+        plugins: [
+          require('tailwindcss'),
+          require('autoprefixer'),
+        ],
+      },
+    },
+  },
 
   devServer: {
     port: 9000,
@@ -18,7 +29,7 @@ module.exports = {
 
   chainWebpack: (config) => {
     const aliases = {
-      '@': path.resolve(__dirname, 'src'), 
+      '@': path.resolve(__dirname, 'src'),
       'components': path.resolve(__dirname, 'src/components'),
       'pages': path.resolve(__dirname, 'src/pages'),
       'assets': path.resolve(__dirname, 'src/assets'),
@@ -33,7 +44,6 @@ module.exports = {
   },
 
   publicPath: process.env.NODE_ENV === 'production' ? '/vendor/' : '/',
-
   outputDir: 'dist',
   assetsDir: 'static',
   productionSourceMap: false,
@@ -43,7 +53,7 @@ module.exports = {
     resolve: {
       extensions: ['.js', '.vue', '.json'],
       alias: {
-        '@': path.resolve(__dirname, 'src'), 
+        '@': path.resolve(__dirname, 'src'),
       },
     },
     module: {
