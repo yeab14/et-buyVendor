@@ -1,53 +1,119 @@
 <template>
-  <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-      <!-- Logo with Animated Glow -->
-      <router-link class="navbar-brand" to="/vendor/overview">
-        <img src="img/et-buy.png" alt="" class="logo" />
-        <span class="brand-text">EtBuy Vendor Portal</span>
+  <nav
+    class="bg-etbuy-red-darken shadow-etbuy-light sticky top-0 z-50 font-public-sans select-none relative"
+    aria-label="Primary Navigation"
+  >
+    <div class="container mx-auto px-6 py-3 flex items-center justify-between">
+      
+ 
+      <router-link
+        to="/vendor/overview"
+        class="flex items-center space-x-3 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded"
+      >
+        <img
+          src="img/et-buy.png"
+          alt="EtBuy Logo"
+          class="h-12 w-auto transition-transform duration-300 ease-in-out hover:scale-110 drop-shadow-md"
+          loading="lazy"
+          decoding="async"
+        />
+        <span
+          class="text-white text-xl font-extrabold tracking-widest uppercase border-l-4 border-etbuy-red-light pl-3 drop-shadow-xl select-text"
+        >
+          EtBuy Vendor Portal
+        </span>
       </router-link>
 
-      <!-- Animated Toggler -->
-      <button type="button" class="navbar-toggler" @click="toggleSidebar">
-        <div class="animated-icon" :class="{ open: $sidebar.showSidebar }">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+     
+      <button
+        @click="toggleSidebar"
+        aria-label="Toggle menu"
+        aria-expanded="$sidebar.showSidebar.toString()"
+        class="sm:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-etbuy-red-light"
+      >
+        <span
+          :class="[
+            'block relative w-7 h-0.5 bg-white transition-transform duration-300 ease-in-out',
+            $sidebar.showSidebar ? 'rotate-45 top-2.5 absolute scale-110' : ''
+          ]"
+        ></span>
+        <span
+          :class="[
+            'block w-7 h-0.5 bg-white my-1 transition-opacity duration-300 ease-in-out',
+            $sidebar.showSidebar ? 'opacity-0' : 'opacity-100'
+          ]"
+        ></span>
+        <span
+          :class="[
+            'block relative w-7 h-0.5 bg-white transition-transform duration-300 ease-in-out',
+            $sidebar.showSidebar ? '-rotate-45 top-2.5 absolute scale-110' : ''
+          ]"
+        ></span>
       </button>
 
-      <div class="collapse navbar-collapse justify-content-end">
-        <ul class="navbar-nav ml-auto">
-          <!-- Notification Icon -->
-          <li class="nav-item notification-item">
-            <a class="nav-link" href="#" @click.prevent="markNotificationRead">
-              <i class="nc-icon nc-bell-55"></i>
-              <span class="notification-count" v-if="notificationCount > 0">{{ notificationCount }}</span>
-            </a>
-          </li>
+  
+      <ul
+        class="hidden sm:flex items-center space-x-8 text-white text-sm font-semibold uppercase tracking-wide"
+      >
+       
+        <li class="relative group">
+          <button
+            @click.prevent="markNotificationRead"
+            aria-label="Notifications"
+            class="relative p-2 rounded-md hover:bg-etbuy-red-light focus:outline-none focus:ring-2 focus:ring-etbuy-red-light transition duration-300"
+          >
+            <i class="fas fa-bell fa-lg drop-shadow-sm"></i>
+            <span
+              v-if="notificationCount > 0"
+              class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs px-1.5 py-0.5 animate-pulse shadow-md"
+              aria-live="polite"
+            >
+              {{ notificationCount }}
+            </span>
+          </button>
+          <span
+            class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity text-etbuy-white-transparent select-none"
+            >Notifications</span
+          >
+        </li>
 
-          <!-- Profile Link -->
-          <li class="nav-item">
-            <router-link class="nav-link profile-link" to="/vendor/user">
-              <i class="nc-icon nc-single-02"></i>
-              {{ vendorName }}
-            </router-link>
-          </li>
+        
+        <li>
+          <router-link
+            to="/vendor/user"
+            class="flex items-center gap-2 hover:text-etbuy-red-light transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded select-text"
+          >
+            <i class="fas fa-user fa-lg drop-shadow-sm"></i>
+            <span class="truncate max-w-[12rem]" :title="vendorName">{{ vendorName }}</span>
+          </router-link>
+        </li>
 
-          <!-- Logout Link -->
-          <li class="nav-item">
-            <a class="nav-link logout-link" href="#" @click.prevent="logout">
-              <i class="nc-icon nc-button-power"></i> Logout
-            </a>
-          </li>
+  
+        <li>
+          <button
+            @click.prevent="logout"
+            class="flex items-center gap-2 hover:text-etbuy-red-light transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded"
+            aria-label="Logout"
+          >
+            <i class="fas fa-power-off fa-lg drop-shadow-sm"></i> Logout
+          </button>
+        </li>
 
-          <!-- Time Display -->
-          <li class="nav-item time">
-            <span>{{ formattedTime }}</span>
-          </li>
-        </ul>
-      </div>
+        
+        <li
+          class="text-etbuy-white-transparent font-mono text-xs px-4 py-1 border border-etbuy-white-transparent rounded select-none backdrop-blur-sm bg-etbuy-dark-glass"
+          aria-live="polite"
+        >
+          {{ formattedTime }}
+        </li>
+      </ul>
     </div>
+
+    
+    <div
+      aria-hidden="true"
+      class="absolute bottom-0 left-0 w-full h-1 rounded-t-lg bg-gradient-to-r from-etbuy-red-light via-etbuy-red-dark to-etbuy-red-light animate-gradient-x"
+    ></div>
   </nav>
 </template>
 
@@ -75,7 +141,6 @@ export default {
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
     },
     markNotificationRead() {
-      console.log("Notification clicked");
       this.notificationCount = 0;
     },
     getCurrentTime() {
@@ -83,7 +148,20 @@ export default {
       const hours = String(date.getHours()).padStart(2, "0");
       const minutes = String(date.getMinutes()).padStart(2, "0");
       const seconds = String(date.getSeconds()).padStart(2, "0");
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
       const month = monthNames[date.getMonth()];
       const year = date.getFullYear();
       return `${month} ${year} | ${hours}:${minutes}:${seconds}`;
@@ -113,195 +191,20 @@ export default {
 </script>
 
 <style scoped>
-.navbar {
-  background-color: #ee5858;
-  color: #fff;
-  font-family: 'Arial', sans-serif;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  padding: 15px 20px;
-  position: relative;
-  z-index: 10;
-}
-
-.container-fluid {
-  padding: 0 20px;
-}
-
-.navbar::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(to right, #fff, #fdd, #fff);
-  background-size: 200% auto;
-  animation: animateGlow 4s linear infinite;
-  border-radius: 3px;
-}
-
-@keyframes animateGlow {
+@keyframes gradient-x {
   0% {
-    background-position: right center;
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
   100% {
-    background-position: left center;
+    background-position: 0% 50%;
   }
 }
 
-.navbar-brand {
-  display: flex;
-  align-items: center;
-  font-size: 24px;
-  font-weight: 700;
-  color: #fff !important;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-}
-
-.logo {
-  height: 45px;
-  margin-right: 10px;
-  transition: transform 0.3s ease;
-}
-
-.navbar-brand:hover .logo {
-  transform: scale(1.1);
-  animation: pulse 1.5s ease infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-}
-
-.brand-text {
-  font-size: 16px;
-  color: #fff !important;
-  padding: 12px 18px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  margin-left: 1vh;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
-}
-
-.navbar-nav .nav-item .nav-link {
-  color: #fff !important;
-  font-size: 16px;
-  padding: 12px 18px;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-}
-
-.navbar-nav .nav-item .nav-link:hover {
-  transform: translateY(-3px);
-  background-color: rgba(255, 255, 255, 0.25);
-  border-radius: 8px;
-  font-weight: 600;
-}
-
-.navbar-nav .nav-item i {
-  margin-right: 8px;
-  font-size: 1.1em;
-  vertical-align: middle;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.notification-item {
-  position: relative;
-}
-
-.notification-count {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: #ff4444;
-  color: white;
-  font-size: 0.7em;
-  padding: 2px 6px;
-  border-radius: 50%;
-  animation: pulseNotification 2s ease infinite;
-}
-
-@keyframes pulseNotification {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-}
-
-.profile-link,
-.logout-link {
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.profile-link:hover,
-.logout-link:hover {
-  color: #ffcd39 !important;
-  transform: translateY(-2px);
-}
-
-.navbar-nav .nav-item.time {
-  font-size: 16px;
-  color: #fff !important;
-  padding: 12px 18px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
-}
-
-.animated-icon {
-  width: 30px;
-  height: 20px;
-  position: relative;
-  margin-top: 5px;
-  cursor: pointer;
-}
-
-.animated-icon span {
-  background: white;
-  display: block;
-  position: absolute;
-  height: 3px;
-  width: 100%;
-  border-radius: 2px;
-  opacity: 1;
-  transform: rotate(0deg);
-  transition: 0.25s ease-in-out;
-}
-
-.animated-icon span:nth-child(1) {
-  top: 0;
-}
-
-.animated-icon span:nth-child(2) {
-  top: 8px;
-}
-
-.animated-icon span:nth-child(3) {
-  top: 16px;
-}
-
-.animated-icon.open span:nth-child(1) {
-  top: 8px;
-  transform: rotate(135deg);
-}
-
-.animated-icon.open span:nth-child(2) {
-  opacity: 0;
-}
-
-.animated-icon.open span:nth-child(3) {
-  top: 8px;
-  transform: rotate(-135deg);
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 4s ease infinite;
 }
 </style>

@@ -28,6 +28,7 @@ module.exports = {
         'etbuy-creamywhite': '#FDEDE8',
         'custom-etbuy-red-dark': '#8b0000',
         'etbuy-white': '#fff1f1',
+        'etbuy-black': '#21201f', 
         'etbuy-dark-glass': 'rgba(0, 0, 0, 0.5)',
         'etbuy-telegram': '#006699',
         'etbuy-whatsapp': '#1ebe5d',
@@ -43,10 +44,12 @@ module.exports = {
         'etbuy-light-hover': '0 12px 36px rgba(238, 88, 88, 0.2)',
         'etbuy-icon-hover': '0 4px 12px rgba(0, 0, 0, 0.1)',
         'etbuy-button': '0 4px 12px rgba(0, 0, 0, 0.08)',
+        'etbuy-footer-glow': '0 -4px 10px rgba(238, 88, 88, 0.25)',
       },
       borderRadius: {
         'logo': '32.5px 0 0 0',
         'full': '9999px',
+        'footer': '12px',
       },
       height: {
         'topbar': '120px',
@@ -73,6 +76,8 @@ module.exports = {
       },
       transitionProperty: {
         'filter': 'filter',
+        'colors': 'color, background-color, border-color, text-decoration-color, fill, stroke',
+        'spacing': 'margin, padding',
       },
       spacing: {
         '10vh': '10vh',
