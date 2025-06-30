@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen font-public-sans bg-transparent text-etbuy-white">
+  <div class="flex min-h-screen font-public-sans bg-transparent text-etbuy-white overflow-x-hidden">
     <Sidebar>
       <template #bottom-links>
         <router-link
@@ -43,3 +43,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+html, body {
+  overflow-x: hidden;
+}
+</style>

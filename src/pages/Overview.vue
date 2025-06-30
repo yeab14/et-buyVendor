@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-etbuy-creamywhite p-8 font-public-sans text-etbuy-black">
     <div class="container mx-auto space-y-12">
 
-      <!-- Stats Cards Grid -->
+   
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         <StatCard
           icon="fas fa-dollar-sign"
@@ -41,7 +41,7 @@
         </StatCard>
       </div>
 
-      <!-- Charts Grid -->
+  
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <ChartCard
           title="Sales Performance"
@@ -68,7 +68,7 @@
         </ChartCard>
       </div>
 
-      <!-- Pending Tasks List -->
+    
       <section
         aria-labelledby="pending-tasks-title"
         class="bg-white rounded-2xl shadow-2xl p-8 border border-[#ffe7e7]"
