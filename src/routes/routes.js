@@ -12,6 +12,7 @@ import StoreSetting from '@/pages/Store/StoreSetting.vue';
 import FAQ from '@/pages/FAQ/FAQ.vue';
 import Financial from '@/pages/Financials/Financial.vue';
 import DynamicInput from '@/pages/ProductManagement/DynamicInput.vue'
+import Message from '@/pages/Message/Message.vue';
 
 // Authentication pages
 import Signup from '@/pages/Authentication/Signup.vue';
@@ -88,6 +89,11 @@ const routes = [
         path: 'StoreSetting',
         name: 'StoreSetting',
         component: StoreSetting 
+      },
+      {
+        path: 'Messaging',
+        name: 'Message',
+        component: Message
       }
     ]
   },
