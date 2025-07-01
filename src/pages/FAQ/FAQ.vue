@@ -53,8 +53,8 @@
       return {
         faqItems: [
           {
-            question: 'How do I update my store settings?',
-            answer: 'Updating your store settings is easy! Simply navigate to your account settings from the dashboard, then click on "Store Settings" to modify your store details like name, logo, payment options, and more.',
+            question: 'How do I update my Profile Settings?',
+            answer: 'Updating your Profile Settings is easy! Simply navigate to your account settings from the dashboard, then click on "Profile Settings" to modify your store details like name, logo, payment options, and more.',
             isOpen: false
           },
           {

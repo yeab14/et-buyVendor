@@ -4,13 +4,13 @@ import NotFound from '@/pages/NotFoundPage.vue';
 // Vendor pages
 import Overview from '@/pages/Overview.vue';
 import UserProfile from '@/pages/UserProfile.vue';
-import OrderManagement from '@/pages/OrderManagement.vue';
+import OrderManagement from '@/pages/OrderManagement/OrderManagement.vue';
 import ProductManagement from '@/pages/ProductManagement/ProductManagement.vue';
 import Icons from '@/pages/Icons.vue';
-import CustomerInteraction from '@/pages/CustomerInteraction.vue';
-import StoreSetting from '@/pages/StoreSetting.vue';
-import FAQ from '@/pages/FAQ.vue';
-import Financial from '@/pages/Financial.vue';
+// import CustomerInteraction from '@/pages/CustomerInteraction.vue';
+import StoreSetting from '@/pages/Store/StoreSetting.vue';
+import FAQ from '@/pages/FAQ/FAQ.vue';
+import Financial from '@/pages/Financials/Financial.vue';
 import DynamicInput from '@/pages/ProductManagement/DynamicInput.vue'
 
 // Authentication pages
@@ -69,11 +69,11 @@ const routes = [
         name: 'Icons',
         component: Icons
       },
-      {
-        path: 'CustomerInteraction',
-        name: 'CustomerInteraction',
-        component: CustomerInteraction
-      },
+      // {
+      //   path: 'CustomerInteraction',
+      //   name: 'CustomerInteraction',
+      //   component: CustomerInteraction
+      // },
       {
         path: 'FAQ',
         name: 'FAQ',

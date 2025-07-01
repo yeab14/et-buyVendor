@@ -118,8 +118,8 @@
           { to: "/vendor/ProductManagement", label: "Products", icon: "fa fa-box-open" },
           { to: "/vendor/OrderManagement", label: "Orders", icon: "fa fa-shipping-fast" },
           { to: "/vendor/Financial", label: "Financials", icon: "fa fa-coins" },
-          { to: "/vendor/CustomerInteraction", label: "Customers", icon: "fa fa-users" },
-          { to: "/vendor/StoreSetting", label: "Store Settings", icon: "fa fa-cogs" },
+        //   { to: "/vendor/CustomerInteraction", label: "Customers", icon: "fa fa-users" },
+          { to: "/vendor/StoreSetting", label: "Profile Settings", icon: "fa fa-cogs" },
           { to: "/vendor/FAQ", label: "Support & Help", icon: "fa fa-question-circle" },
         ],
         engagementMenuItems: [
