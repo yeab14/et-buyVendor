@@ -3,13 +3,18 @@
     <Sidebar>
       <template #bottom-links>
         <router-link
-          to="/vendor/login"
-          class="flex items-center px-6 py-4 mt-4 bg-etbuy-red-light hover:bg-etbuy-red-dark text-etbuy-white font-semibold rounded-t-md transition-colors duration-300 shadow-etbuy-button select-none focus:outline-none focus:ring-2 focus:ring-etbuy-red-light focus:ring-offset-1 focus:ring-offset-etbuy-black"
-          aria-label="Logout"
-        >
-          <i class="fa fa-power-off fa-lg w-6"></i>
-          <p class="ml-3 text-base whitespace-nowrap">Logout</p>
-        </router-link>
+        to="/vendor/login"
+        class="group flex items-center justify-center gap-3 px-6 py-3 mt-6 w-full 
+               bg-topbar-bg text-white font-semibold rounded-full 
+               shadow-etbuy-button hover:bg-etbuy-red-dark 
+               transition-colors duration-300 ease-in-out 
+               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-etbuy-red-light"
+        aria-label="Logout"
+      >
+        <i class="fa fa-power-off fa-lg group-hover:rotate-12 transition-transform duration-300 ease-in-out"></i>
+        <span class="text-base whitespace-nowrap group-hover:underline">Logout</span>
+      </router-link>
+      
       </template>
     </Sidebar>
 

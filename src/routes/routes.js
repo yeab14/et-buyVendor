@@ -13,6 +13,8 @@ import FAQ from '@/pages/FAQ/FAQ.vue';
 import Financial from '@/pages/Financials/Financial.vue';
 import DynamicInput from '@/pages/ProductManagement/DynamicInput.vue'
 import Message from '@/pages/Message/Message.vue';
+import Follower from '@/pages/Followers/Follower.vue';
+import MembershipRequest from '@/pages/Membership/Membership-request.vue'
 
 // Authentication pages
 import Signup from '@/pages/Authentication/Signup.vue';
@@ -94,6 +96,17 @@ const routes = [
         path: 'Messaging',
         name: 'Message',
         component: Message
+      },
+      {
+        path: 'Followers',
+        name: 'Follower',
+        component: Follower
+      },
+
+      {
+        path: 'membership-requests',
+        name: 'MembershipRequest',
+        component: MembershipRequest
       }
     ]
   },

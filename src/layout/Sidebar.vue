@@ -124,7 +124,7 @@
         ],
         engagementMenuItems: [
           { to: "/vendor/messaging", label: "Messaging", icon: "fa fa-comments" },
-          { to: "/vendor/follow-requests", label: "Followers", icon: "fa fa-user-plus" },
+          { to: "/vendor/followers", label: "Followers", icon: "fa fa-user-plus" },
           { to: "/vendor/membership-requests", label: "Memberships", icon: "fa fa-users-cog" },
         ],
       };

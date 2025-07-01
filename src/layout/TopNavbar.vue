@@ -71,10 +71,7 @@
               {{ notificationCount }}
             </span>
           </button>
-          <span
-            class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity text-etbuy-white-transparent select-none"
-            >Notifications</span
-          >
+          
         </li>
 
         
@@ -207,4 +204,31 @@ export default {
   background-size: 200% 200%;
   animation: gradient-x 4s ease infinite;
 }
+
+
+/* Underline animation with !important */
+.hover-underline {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.hover-underline::after {
+  content: "" !important;
+  position: absolute !important;
+  width: 100% !important;
+  height: 2px !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  background-color: currentColor !important;
+  transform: scaleX(0) !important;
+  transform-origin: right !important;
+  transition: transform 0.3s ease !important;
+}
+
+.hover-underline:hover::after,
+.hover-underline:focus::after {
+  transform: scaleX(1) !important;
+  transform-origin: left !important;
+}
+
 </style>
