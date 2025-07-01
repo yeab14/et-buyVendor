@@ -110,12 +110,13 @@
       <section class="text-center pt-4">
         <button
           @click="contactSupport"
-          class="inline-flex items-center gap-3 px-10 py-3 rounded-full border border-etbuy-red-dark text-etbuy-white bg-topbar-bg font-semibold hover:bg-etbuy-red-light hover:text-etbuy-black transition-shadow hover:shadow-etbuy-button"
+          class="inline-flex items-center justify-center gap-3 px-8 py-3 rounded-full bg-topbar-bg text-etbuy-white font-semibold shadow-etbuy-button transition-all duration-300 hover:bg-etbuy-red-dark hover:text-white hover:shadow-etbuy-light-hover"
         >
           <i class="fas fa-headset"></i>
           Contact Support
         </button>
       </section>
+      
 
     </main>
   </div>

@@ -82,9 +82,25 @@
 
         <!-- Actions -->
         <section class="flex flex-col md:flex-row gap-4 justify-center">
-          <button type="submit" class="primary-btn">Save Changes</button>
-          <button type="button" @click="resetForm" class="secondary-btn">Reset</button>
+          <button
+            type="submit"
+            class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-topbar-bg text-etbuy-white font-semibold shadow-etbuy-button transition-all duration-300 hover:bg-etbuy-red-dark hover:text-white hover:shadow-etbuy-light-hover"
+          >
+            <i class="fas fa-save"></i>
+            Save Changes
+          </button>
+          <button
+          type="button"
+          @click="resetForm"
+          class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full border border-etbuy-red-dark text-etbuy-red-dark bg-white font-semibold shadow-etbuy-button transition-all duration-300 hover:bg-etbuy-red-light hover:text-etbuy-black hover:shadow-etbuy-light-hover"
+        >
+          <i class="fas fa-undo-alt"></i>
+          Reset
+        </button>
+        
         </section>
+
+        
       </form>
     </section>
   </div>
