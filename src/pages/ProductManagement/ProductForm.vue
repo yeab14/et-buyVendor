@@ -1,222 +1,437 @@
 <template>
-  <div class="form-container">
-    <h1 class="form-title">Product Management</h1>
-    <form @submit.prevent="submitForm" class="product-form">
-      <div class="form-grid">
-        <!-- Category and SubCategory Section -->
-        <div class="form-section">
-          <h3 class="section-title">Category Details</h3>
-          <div class="form-group">
-            <label>Category</label>
-            <select v-model="product.categoryId" required>
-              <option disabled value="">Select Category</option>
-              <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
-            </select>
-          </div>
+  <div class="max-w-[1400px] mx-auto my-8 p-8 bg-white rounded-2xl shadow-lg">
+    <h1
+    class="font-public-sans text-4xl font-extrabold text-etbuy-red-dark text-center mb-8"
+  >
+    <span class="block text-etbuy-red-light mb-2 text-lg uppercase tracking-widest font-semibold">
+      Ready to Sell?
+    </span>
+    <span>You Can Create Your Product Here</span>
+  </h1>
+  
+    <form @submit.prevent="submitForm" class="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
 
-          <div class="form-group">
-            <label>Sub Category</label>
-            <select v-model="product.subCategoryId" required>
-              <option disabled value="">Select Sub Category</option>
-              <option v-for="subCategory in subCategories" :key="subCategory.id" :value="subCategory.id">{{ subCategory.name }}</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Basic Info Section -->
-        <div class="form-section">
-          <h3 class="section-title">Basic Information</h3>
-          <div class="form-group">
-            <label>Product Name</label>
-            <input type="text" v-model="product.name" required />
-          </div>
-
-          <div class="form-group">
-            <label>Brand</label>
-            <input type="text" v-model="product.brand" required />
-          </div>
-
-          <div class="form-group">
-            <label>SKU</label>
-            <input type="text" v-model="product.sku" required />
-          </div>
-        </div>
-
-       
-
-        <!-- Pricing Section -->
-        <div class="form-section">
-          <h3 class="section-title">Pricing Details</h3>
-          <div class="form-group">
-            <label>Original Price</label>
-            <input type="number" v-model.number="product.originalPrice" required />
-          </div>
-
-          <div class="form-group">
-            <label>Current Price</label>
-            <input type="number" v-model.number="product.currentPrice" required />
-          </div>
-
-          <div class="form-group">
-            <label>Discount Price</label>
-            <input type="number" v-model.number="product.discountPrice" />
-          </div>
-
-          <div class="form-group">
-            <label>Discount Percent</label>
-            <input type="number" v-model.number="product.discountPercent" />
-          </div>
-        </div>
-
-        <!-- Rating & Tags Section -->
-        <div class="form-section">
-          <h3 class="section-title">Additional Details</h3>
-          <div class="form-group">
-            <label>Rating</label>
-            <input type="number" v-model.number="product.rating" min="0" max="5" step="0.1" required />
-          </div>
-
-          <div class="form-group">
-            <label>Tag</label>
-            <input type="text" v-model="product.tag" />
-          </div>
-
-          <div class="form-group">
-            <label>Availability</label>
-            <select v-model="product.availability">
-              <option :value="true">Available</option>
-              <option :value="false">Out of Stock</option>
-            </select>
-          </div>
-        </div>
-
-           <!-- Description Section -->
-           <div class="form-section full-width">
-            <h3 class="section-title">Product Description</h3>
-            <div class="form-group">
-              <textarea v-model="product.description" rows="4" placeholder="Enter product description"></textarea>
-            </div>
-          </div>
-
-        <!-- Attributes Section -->
-        <div class="form-section full-width">
-          <h3 class="section-title">Product Attributes</h3>
-          <div class="attributes-grid">
-            <div v-for="attribute in attributeDefinitions" :key="attribute.id" class="attribute-group">
-              <label class="form-label">{{ attribute.name }}</label>
-              <DynamicInput
-                :inputType="attribute.inputType"
-                :value="attributeValues[attribute.id]?.value"
-                @update:modelValue="(value, selectedOption) => updateAttributeValue(attribute.id, value, selectedOption)"
-                :options="attributeOptions[attribute.id] || []"
-              />
-            </div>
-          </div>
-        </div>
-
-<!-- Shipping Section -->
-<div class="form-section full-width">
-  <h3 class="section-title">Shipping Information</h3>
-  <div class="shipping-container">
-    <!-- Selected Shipping Chips -->
-    <div class="chips-container">
-      <div
-        class="chip"
-        v-for="option in product.shippingInfo"
-        :key="option"
-        @click="removeShippingInfo(option)"
-      >
-        <span>{{ option }}</span>
-        <button type="button" class="clear-btn">×</button>
-      </div>
-    </div>
-
-    <!-- Shipping Provider Dropdown -->
-    <select
-      v-model="selectedShippingOption"
-      @change="addShippingInfo"
-      class="shipping-select"
+      <!-- Category and SubCategory Section -->
+      <section
+      class="bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
     >
-      <option disabled value="">Select Shipping Provider</option>
-      <option
-        v-for="provider in shippingProviders"
-        :key="provider.id"
-        :value="provider.name"
-      >
-        {{ provider.name }} - ${{ provider.baseCost }} | {{ provider.minDeliveryDays }}-{{ provider.maxDeliveryDays }} days
-      </option>
-    </select>
+    <h3
+    class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
+  >
+    Category Details
+  </h3>
+  
+      <div class="mb-6">
+        <label class="block mb-2 font-medium text-etbuy-black/90">Category</label>
+        <select
+          v-model="product.categoryId"
+          required
+          class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                 focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                 transition-colors duration-300 shadow-etbuy-button"
+        >
+          <option disabled value="">Select Category</option>
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+          >
+            {{ category.name }}
+          </option>
+        </select>
+      </div>
+    
+      <div>
+        <label class="block mb-2 font-medium text-etbuy-black/90">Sub Category</label>
+        <select
+          v-model="product.subCategoryId"
+          required
+          class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                 focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                 transition-colors duration-300 shadow-etbuy-button"
+        >
+          <option disabled value="">Select Sub Category</option>
+          <option
+            v-for="subCategory in subCategories"
+            :key="subCategory.id"
+            :value="subCategory.id"
+          >
+            {{ subCategory.name }}
+          </option>
+        </select>
+      </div>
+    </section>
+    
+    
+    
 
-    <!-- Provider Details Card -->
-    <div v-if="providerDetails" class="provider-details">
-      <div class="provider-card">
-        <img
-          :src="'/assets/logos/' + providerDetails.logo"
-          :alt="providerDetails.name"
-          class="provider-logo"
-        />
-        <p><strong>{{ providerDetails.name }}</strong></p>
-        <p>{{ providerDetails.description }}</p>
-        <p>Base Cost: ${{ providerDetails.baseCost }}</p>
-        <p>Delivery: {{ providerDetails.minDeliveryDays }}-{{ providerDetails.maxDeliveryDays }} days</p>
+      <!-- Basic Info Section -->
+      <section
+      class="bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
+    >
+    <h3
+    class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
+  >
+   Basic Information
+  </h3>
+      <div class="space-y-6">
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">Product Name</label>
+          <input
+            type="text"
+            v-model="product.name"
+            required
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+    
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">Brand</label>
+          <input
+            type="text"
+            v-model="product.brand"
+            required
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+    
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">SKU</label>
+          <input
+            type="text"
+            v-model="product.sku"
+            required
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+      </div>
+    </section>
+    
+
+      <!-- Pricing Section -->
+      <section
+      class="bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
+    >
+    <h3
+    class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
+  >
+ Pricing Details
+  </h3>
+    
+      <div class="space-y-6">
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">Original Price</label>
+          <input
+            type="number"
+            v-model.number="product.originalPrice"
+            required
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+    
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">Current Price</label>
+          <input
+            type="number"
+            v-model.number="product.currentPrice"
+            required
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+    
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">Discount Price</label>
+          <input
+            type="number"
+            v-model.number="product.discountPrice"
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+    
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">Discount Percent</label>
+          <input
+            type="number"
+            v-model.number="product.discountPercent"
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+      </div>
+    </section>
+    
+
+      <!-- Additional Details Section -->
+      <section
+      class="bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
+    >
+    <h3
+    class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
+  >
+   Additional Details
+  </h3>
+      <div class="space-y-6">
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">Rating</label>
+          <input
+            type="number"
+            min="0"
+            max="5"
+            step="0.1"
+            v-model.number="product.rating"
+            required
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+    
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">Tag</label>
+          <input
+            type="text"
+            v-model="product.tag"
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+    
+        <div>
+          <label class="block mb-2 font-medium text-etbuy-black/90">Availability</label>
+          <select
+            v-model="product.availability"
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          >
+            <option :value="true">Available</option>
+            <option :value="false">Out of Stock</option>
+          </select>
+        </div>
+      </div>
+    </section>
+    
+
+      <!-- Description Section -->
+      <section
+      class="col-span-full bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
+    >
+    <h3
+    class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
+  >
+   product Description
+  </h3>
+    
+      <textarea
+        v-model="product.description"
+        rows="4"
+        placeholder="Enter product description"
+        class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white resize-none
+               focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+               transition-colors duration-300 shadow-etbuy-button"
+      ></textarea>
+    </section>
+    
+      <!-- Attributes Section -->
+      <section
+      class="col-span-full bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
+    >
+      <h3
+        class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
+      >
+        Product Attributes
+      </h3>
+    
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div v-for="attribute in attributeDefinitions" :key="attribute.id" class="flex flex-col">
+          <label class="mb-2 font-medium text-etbuy-black/90">{{ attribute.name }}</label>
+          <DynamicInput
+            :inputType="attribute.inputType"
+            :value="attributeValues[attribute.id]?.value"
+            @update:modelValue="(value, selectedOption) => updateAttributeValue(attribute.id, value, selectedOption)"
+            :options="attributeOptions[attribute.id] || []"
+            class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-creamywhite
+                   focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                   transition-colors duration-300 shadow-etbuy-button"
+          />
+        </div>
+      </div>
+    </section>
+    
+    
+
+    <section
+    class="col-span-full bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
+  >
+  <h3
+  class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
+>
+Shipping Information
+</h3>
+    <div class="flex flex-col gap-4">
+      <!-- Selected Shipping Chips -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        <div
+          v-for="option in product.shippingInfo"
+          :key="option"
+          class="flex items-center gap-2 px-4 py-1 rounded-full border border-etbuy-red-light bg-etbuy-red-light/10 text-etbuy-red-dark cursor-pointer select-none"
+          @click="removeShippingInfo(option)"
+        >
+          <span>{{ option }}</span>
+          <button
+            type="button"
+            class="text-etbuy-red-dark hover:text-etbuy-red-darken focus:outline-none"
+            aria-label="Remove shipping option"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+  
+      <!-- Shipping Provider Dropdown -->
+      <select
+        v-model="selectedShippingOption"
+        @change="addShippingInfo"
+        class="px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+               focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+               transition-colors duration-300 shadow-etbuy-button"
+      >
+        <option disabled value="">Select Shipping Provider</option>
+        <option
+          v-for="provider in shippingProviders"
+          :key="provider.id"
+          :value="provider.name"
+        >
+          {{ provider.name }} - ${{ provider.baseCost }} | {{ provider.minDeliveryDays }}-{{ provider.maxDeliveryDays }} days
+        </option>
+      </select>
+  
+      <!-- Provider Details Card -->
+      <div v-if="providerDetails" class="mt-4">
+        <div class="bg-soft-peach border border-etbuy-red-light rounded-lg p-4 shadow-etbuy-button">
+          <img
+            :src="'/assets/logos/' + providerDetails.logo"
+            :alt="providerDetails.name"
+            class="max-w-[80px] mb-3"
+          />
+          <p class="font-semibold text-etbuy-black">{{ providerDetails.name }}</p>
+          <p class="text-sm text-etbuy-black/80">{{ providerDetails.description }}</p>
+          <p class="text-sm mt-2 text-etbuy-black/90">Base Cost: ${{ providerDetails.baseCost }}</p>
+          <p class="text-sm text-etbuy-black/90">
+            Delivery: {{ providerDetails.minDeliveryDays }}-{{ providerDetails.maxDeliveryDays }} days
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  </section>
+  
 
+      <!-- Additional Info Section -->
+      <section
+      class="col-span-full bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
+    >
+      <h3
+        class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
+      >
+        Additional Information
+      </h3>
+    
+      <textarea
+        v-model="product.additionalInformation"
+        rows="4"
+        placeholder="Enter additional information"
+        class="w-full px-4 py-3 bg-etbuy-creamywhite rounded-lg text-etbuy-black resize-none
+               focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+               transition-colors duration-300 shadow-etbuy-button border-none"
+      ></textarea>
+    </section>
+    
+
+
+      <!-- Image Upload Section -->
+      <section
+      class="col-span-full bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
+    >
+    <h3
+    class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
+  >
+Product Image
+  </h3>
+    
+      <div
+        class="border-2 rounded-xl p-8 text-center cursor-pointer transition-colors duration-300"
+        :class="product.image ? 'border-solid bg-soft-peach border-etbuy-red-light' : 'border-dashed border-etbuy-red-light'"
+        @click="$refs.fileInput.click()"
+      >
+        <input
+          ref="fileInput"
+          type="file"
+          @change="handleFileUpload"
+          accept="image/*"
+          class="hidden"
+          id="file-upload"
+        />
+        <label
+          for="file-upload"
+          class="flex flex-col items-center gap-4 text-etbuy-red-dark cursor-pointer select-none"
+        >
+          <template v-if="!product.image">
+            <span class="text-4xl font-thin">+</span>
+            <span class="font-medium">Choose Image</span>
+            <span class="text-xs text-gray-500">Max size: 5MB</span>
+          </template>
+          <template v-else>
+            <img
+              :src="imagePreviewUrl"
+              alt="Preview"
+              class="max-w-[200px] max-h-[200px] rounded-lg shadow-etbuy-light mx-auto"
+            />
+            <span class="block truncate mt-2 text-etbuy-black font-medium">{{ product.image.name }}</span>
+            <button
+              type="button"
+              class="mt-4 bg-etbuy-red-dark text-white rounded-md px-4 py-2 text-sm hover:bg-custom-etbuy-red-dark transition"
+              @click.stop="removeImage"
+            >
+              Remove Image
+            </button>
+          </template>
+        </label>
+      </div>
+    </section>
+    
+
+      <!-- Submit Button -->
+      <section class="col-span-full">
+        <button
+          type="submit"
+          class="w-full py-4 bg-etbuy-red-dark text-white font-semibold rounded-lg shadow-etbuy-button
+                 hover:bg-etbuy-red-darken hover:shadow-etbuy-light-hover
+                 transform hover:-translate-y-0.5 transition duration-300 ease-in-out"
+        >
+         Create Product
+        </button>
+      </section>
       
 
-        <!-- Additional Info Section -->
-        <div class="form-section full-width">
-          <h3 class="section-title">Additional Information</h3>
-          <div class="form-group">
-            <textarea v-model="product.additionalInformation" rows="4" placeholder="Enter additional information"></textarea>
-          </div>
-        </div>
-
-        <!-- Image Upload Section -->
-        <div class="form-section full-width">
-          <h3 class="section-title">Product Images</h3>
-          <div class="upload-container" :class="{ 'has-image': product.image }">
-            <input 
-              type="file" 
-              @change="handleFileUpload" 
-              id="file-upload" 
-              class="file-input"
-              accept="image/*"
-            />
-            <label for="file-upload" class="upload-label">
-              <template v-if="!product.image">
-                <span class="upload-icon">+</span>
-                <span>Choose Image</span>
-                <span class="upload-hint">Max size: 5MB</span>
-              </template>
-              <template v-else>
-                <img 
-                  :src="imagePreviewUrl" 
-                  class="preview-image" 
-                  alt="Preview"
-                />
-                <span class="image-name">{{ product.image.name }}</span>
-                <button type="button" class="remove-image" @click="removeImage">
-                  Remove Image
-                </button>
-              </template>
-            </label>
-          </div>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="form-section full-width">
-          <button type="submit" class="submit-btn">Save Product</button>
-        </div>
-      </div>
     </form>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, watch, computed } from "vue";
+<script>
 import * as Yup from "yup";
 import fetchCategories from "@/api/categories";
 import fetchSubCategories from "@/api/subcategories"; 
@@ -226,304 +441,328 @@ import fetchShippingProviders from '@/api/shippingProviders';
 import { createProduct } from "@/api/product";
 import DynamicInput from '@/pages/ProductManagement/DynamicInput.vue';
 
-const product = ref({
-  name: "",
-  description: "",
-  originalPrice: null,
-  currentPrice: null,
-  categoryId: null,
-  subCategoryId: null,
-  rating: null,
-  tag: "",
-  sku: "",
-  brand: "",
-  availability: true,
-  discountPrice: null,
-  discountPercent: null,
-  additionalInformation: "",
-  attributes: [],
-  shippingInfo: [],
-  image: null
-});
+export default {
+  name: 'ProductForm',
+  
+  components: {
+    DynamicInput
+  },
 
-const categories = ref([]);
-const subCategories = ref([]);
-const attributeDefinitions = ref([]);
-const attributeValues = ref({});
-const attributeOptions = ref({});
-const shippingProviders = ref([]);
-const selectedShippingOption = ref("");
-
-// Computed Properties
-const imagePreviewUrl = computed(() => {
-  return product.value.image ? URL.createObjectURL(product.value.image) : '';
-});
-
-const providerDetails = computed(() => {
-  if (!selectedShippingOption.value) return null;
-  return shippingProviders.value.find(
-    provider => provider.name === selectedShippingOption.value
-  );
-});
-
-// Form submission
-const submitForm = async function() {
-  try {
-    // Validate required fields
-    if (!product.value.name || !product.value.categoryId || !product.value.subCategoryId) {
-      alert('Please fill in all required fields');
-      throw new Error('Missing required fields');
-    }
-
-    // Validate image
-    if (!product.value.image) {
-      alert('Please select an image');
-      throw new Error('Missing image');
-    }
-
-    // Format the product data
-    const formattedProduct = {
-      name: product.value.name,
-      description: product.value.description,
-      originalPrice: Number(product.value.originalPrice),
-      currentPrice: Number(product.value.currentPrice),
-      categoryId: Number(product.value.categoryId),
-      subCategoryId: Number(product.value.subCategoryId),
-      rating: Number(product.value.rating),
-      tag: product.value.tag,
-      sku: product.value.sku,
-      brand: product.value.brand,
-      availability: product.value.availability,
-      discountPrice: Number(product.value.discountPrice) || null,
-      discountPercent: Number(product.value.discountPercent) || null,
-      additionalInformation: product.value.additionalInformation,
-      attributes: Object.values(attributeValues.value)
-        .filter(attr => attr.value !== "" && attr.attributeValueId)
-        .map(attr => ({
-          attributeDefinitionId: Number(attr.attributeDefinitionId),
-          attributeValueId: Number(attr.attributeValueId),
-          value: attr.value
-        })),
-      shippingInfo: product.value.shippingInfo.map(info => ({
-        shippingMethod: info,
-        shippingProviderId: Number(shippingProviders.value.find(p => p.name === info)?.id || 1),
-        weight: 0.5,
-        shippingTime: "5-7 business days"
-      }))
+  data() {
+    return {
+      product: {
+        name: "",
+        description: "",
+        originalPrice: null,
+        currentPrice: null,
+        categoryId: null,
+        subCategoryId: null,
+        rating: null,
+        tag: "",
+        sku: "",
+        brand: "",
+        availability: true,
+        discountPrice: null,
+        discountPercent: null,
+        additionalInformation: "",
+        attributes: [],
+        shippingInfo: [],
+        image: null
+      },
+      categories: [],
+      subCategories: [],
+      attributeDefinitions: [],
+      attributeValues: {},
+      attributeOptions: {},
+      shippingProviders: [],
+      selectedShippingOption: ""
     };
+  },
 
-    // Create FormData
-    const formData = new FormData();
-    formData.append('product', new Blob([JSON.stringify(formattedProduct)], {
-      type: 'application/json'
-    }));
-    formData.append('image', product.value.image);
+  computed: {
+    imagePreviewUrl() {
+      return this.product.image ? URL.createObjectURL(this.product.image) : '';
+    },
 
-    // Call the API
-    const createdProduct = await createProduct(formData);
-    console.log("Product created successfully:", createdProduct);
-
-    // Reset form on success
-    resetForm();
-
-    return createdProduct;
-
-  } catch (err) {
-    console.error("Error submitting form:", err);
-    alert('Error creating product: ' + (err.message || 'Please try again.'));
-    throw err;
-  }
-};
-
-// File handling
-const handleFileUpload = function(event) {
-  const file = event.target.files[0];
-  if (file) {
-    // Validate file type
-    if (!file.type.match('image.*')) {
-      alert('Please select an image file');
-      event.target.value = ''; // Clear the input
-      return;
+    providerDetails() {
+      if (!this.selectedShippingOption) return null;
+      return this.shippingProviders.find(
+        provider => provider.name === this.selectedShippingOption
+      );
     }
-    // Validate file size (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size should not exceed 5MB');
-      event.target.value = ''; // Clear the input
-      return;
-    }
-    product.value.image = file;
-    console.log('Image file selected:', file.name, file.type, file.size);
-  }
-};
+  },
 
-const removeImage = () => {
-  product.value.image = null;
-  const fileInput = document.getElementById('file-upload');
-  if (fileInput) {
-    fileInput.value = '';
-  }
-};
-
-const resetForm = () => {
-  product.value = {
-    name: "",
-    description: "",
-    originalPrice: null,
-    currentPrice: null,
-    categoryId: null,
-    subCategoryId: null,
-    rating: null,
-    tag: "",
-    sku: "",
-    brand: "",
-    availability: true,
-    discountPrice: null,
-    discountPercent: null,
-    additionalInformation: "",
-    attributes: [],
-    shippingInfo: [],
-    image: null
-  };
-  attributeValues.value = {};
-  attributeOptions.value = {};
-};
-
-const addShippingInfo = () => {
-  if (selectedShippingOption.value && !product.value.shippingInfo.includes(selectedShippingOption.value)) {
-    product.value.shippingInfo.push(selectedShippingOption.value);
-    selectedShippingOption.value = "";
-  }
-};
-
-const removeShippingInfo = (option) => {
-  product.value.shippingInfo = product.value.shippingInfo.filter(o => o !== option);
-};
-
-// Initialize data on mount
-onMounted(async () => {
-  try {
-    const [categoriesData, providersData] = await Promise.all([
-      fetchCategories(),
-      fetchShippingProviders()
-    ]);
-    categories.value = categoriesData.categories || categoriesData;
-    shippingProviders.value = providersData.filter(provider => provider.isActive);
-  } catch (error) {
-    console.error("Error during initialization:", error);
-  }
-});
-
-const updateAttributeValue = (attributeId, value, selectedOption) => {
-  console.log('Updating attribute value:', { attributeId, value, selectedOption });
-  if (attributeValues.value[attributeId]) {
-    attributeValues.value[attributeId] = {
-      ...attributeValues.value[attributeId],
-      value: value,
-      attributeValueId: selectedOption?.attributeValueId
-    };
-    console.log('Updated attributeValues:', attributeValues.value);
-  }
-};
-
-// Watch for category changes
-watch(
-  () => product.value.categoryId,
-  async (newCategoryId) => {
-    if (newCategoryId) {
-      try {
-        const response = await fetchSubCategories(newCategoryId);
-        // Handle both array and object response formats
-        subCategories.value = Array.isArray(response) 
-          ? response 
-          : response.subCategories || [];
-        
-        // Reset subcategory selection when category changes
-        product.value.subCategoryId = null;
-        // Also reset attributes when category changes
-        attributeDefinitions.value = [];
-        attributeValues.value = {};
-        attributeOptions.value = {};
-      } catch (error) {
-        console.error("Error fetching subcategories:", error);
-        subCategories.value = [];
-      }
-    } else {
-      subCategories.value = [];
-      product.value.subCategoryId = null;
-    }
-  }
-);
-
-// Watch for subcategory changes
-watch(
-  () => product.value.subCategoryId,
-  async (newSubCategoryId) => {
-    if (newSubCategoryId) {
-      try {
-        // Fetch attribute definitions
-        const definitions = await fetchAttributeDefinitionsBySubCategory(newSubCategoryId);
-        attributeDefinitions.value = Array.isArray(definitions) ? definitions : [];
-        console.log('Fetched attribute definitions:', attributeDefinitions.value);
-
-        // Clear existing attribute data
-        attributeOptions.value = {};
-        attributeValues.value = {};
-
-        // Fetch values for each attribute definition
-        await Promise.all(attributeDefinitions.value.map(async (attribute) => {
+  watch: {
+    'product.categoryId': {
+      async handler(newCategoryId) {
+        if (newCategoryId) {
           try {
-            const values = await fetchAttributeValuesByDefinitionId(attribute.id);
-            console.log(`Fetched values for attribute ${attribute.id}:`, values);
+            const response = await fetchSubCategories(newCategoryId);
+            this.subCategories = Array.isArray(response) 
+              ? response 
+              : response.subCategories || [];
             
-            if (Array.isArray(values)) {
-              // Map the values to the expected format
-              const mappedOptions = values.map(value => ({
-                id: value.id,
-                label: value.value,
-                value: value.value,
-                attributeValueId: value.id
-              }));
-              
-              // Update options
-              attributeOptions.value[attribute.id] = mappedOptions;
-              
-              // Initialize the attribute value
-              attributeValues.value[attribute.id] = {
-                attributeDefinitionId: attribute.id,
-                name: attribute.name,
-                attributeValueId: null,
-                value: ""
-              };
-            }
+            this.product.subCategoryId = null;
+            this.attributeDefinitions = [];
+            this.attributeValues = {};
+            this.attributeOptions = {};
           } catch (error) {
-            console.error(`Error fetching values for attribute ${attribute.id}:`, error);
+            console.error("Error fetching subcategories:", error);
+            this.subCategories = [];
           }
-        }));
-      } catch (error) {
-        console.error("Error fetching attribute definitions:", error);
-        attributeDefinitions.value = [];
-        attributeValues.value = {};
-        attributeOptions.value = {};
+        } else {
+          this.subCategories = [];
+          this.product.subCategoryId = null;
+        }
       }
-    } else {
-      attributeDefinitions.value = [];
-      attributeValues.value = {};
-      attributeOptions.value = {};
+    },
+
+    'product.subCategoryId': {
+      async handler(newSubCategoryId) {
+        if (newSubCategoryId) {
+          try {
+            const definitions = await fetchAttributeDefinitionsBySubCategory(newSubCategoryId);
+            this.attributeDefinitions = Array.isArray(definitions) ? definitions : [];
+            
+            this.attributeOptions = {};
+            this.attributeValues = {};
+
+            await Promise.all(this.attributeDefinitions.map(async (attribute) => {
+              try {
+                const values = await fetchAttributeValuesByDefinitionId(attribute.id);
+                
+                if (Array.isArray(values)) {
+                  const mappedOptions = values.map(value => ({
+                    id: value.id,
+                    label: value.value,
+                    value: value.value,
+                    attributeValueId: value.id
+                  }));
+                  
+                  this.$set(this.attributeOptions, attribute.id, mappedOptions);
+                  this.$set(this.attributeValues, attribute.id, {
+                    attributeDefinitionId: attribute.id,
+                    name: attribute.name,
+                    attributeValueId: null,
+                    value: ""
+                  });
+                }
+              } catch (error) {
+                console.error(`Error fetching values for attribute ${attribute.id}:`, error);
+              }
+            }));
+          } catch (error) {
+            console.error("Error fetching attribute definitions:", error);
+            this.attributeDefinitions = [];
+            this.attributeValues = {};
+            this.attributeOptions = {};
+          }
+        } else {
+          this.attributeDefinitions = [];
+          this.attributeValues = {};
+          this.attributeOptions = {};
+        }
+      }
+    },
+
+    attributeValues: {
+      handler(newValues) {
+        this.product.attributes = Object.entries(newValues)
+          .filter(([_, attr]) => attr.value !== "" && attr.attributeValueId)
+          .map(([id, attr]) => ({
+            attributeDefinitionId: Number(id),
+            attributeValueId: Number(attr.attributeValueId),
+            value: attr.value
+          }));
+      },
+      deep: true
     }
+  },
+
+  async mounted() {
+    try {
+      const [categoriesData, providersData] = await Promise.all([
+        fetchCategories(),
+        fetchShippingProviders()
+      ]);
+      this.categories = categoriesData.categories || categoriesData;
+      this.shippingProviders = providersData.filter(provider => provider.isActive);
+    } catch (error) {
+      console.error("Error during initialization:", error);
+    }
+  },
+
+  methods: {
+    async submitForm() {
+      try {
+        if (!this.product.name || !this.product.categoryId || !this.product.subCategoryId) {
+          this.$bvToast.toast('Please fill in all required fields', {
+            title: 'Validation Error',
+            variant: 'danger',
+            solid: true
+          });
+          throw new Error('Missing required fields');
+        }
+
+        if (!this.product.image) {
+          this.$bvToast.toast('Please select an image', {
+            title: 'Validation Error',
+            variant: 'danger',
+            solid: true
+          });
+          throw new Error('Missing image');
+        }
+
+        const formattedProduct = {
+          name: this.product.name,
+          description: this.product.description,
+          originalPrice: Number(this.product.originalPrice),
+          currentPrice: Number(this.product.currentPrice),
+          categoryId: Number(this.product.categoryId),
+          subCategoryId: Number(this.product.subCategoryId),
+          rating: Number(this.product.rating),
+          tag: this.product.tag,
+          sku: this.product.sku,
+          brand: this.product.brand,
+          availability: this.product.availability,
+          discountPrice: Number(this.product.discountPrice) || null,
+          discountPercent: Number(this.product.discountPercent) || null,
+          additionalInformation: this.product.additionalInformation,
+          attributes: Object.values(this.attributeValues)
+            .filter(attr => attr.value !== "" && attr.attributeValueId)
+            .map(attr => ({
+              attributeDefinitionId: Number(attr.attributeDefinitionId),
+              attributeValueId: Number(attr.attributeValueId),
+              value: attr.value
+            })),
+          shippingInfo: this.product.shippingInfo.map(info => ({
+            shippingMethod: info,
+            shippingProviderId: Number(this.shippingProviders.find(p => p.name === info)?.id || 1),
+            weight: 0.5,
+            shippingTime: "5-7 business days"
+          }))
+        };
+
+        const formData = new FormData();
+        formData.append('product', new Blob([JSON.stringify(formattedProduct)], {
+          type: 'application/json'
+        }));
+        formData.append('image', this.product.image);
+
+        const createdProduct = await createProduct(formData);
+        
+        // Show success toast
+        this.$bvToast.toast(
+  '🎉 Success! Your product is now live on EtBuy. 🚀 Keep going — your journey to more sales and greater reach starts here! 💼',
+  {
+    title: '✅ Product Added Successfully!',
+    variant: 'success',
+    solid: true,
+    autoHideDelay: 5000,
+    toaster: 'b-toaster-top-right',
   }
 );
 
-// Watch for attributeValues changes
-watch(attributeValues, (newValues) => {
-  console.log('Attribute values changed:', newValues);
-  product.value.attributes = Object.entries(newValues)
-    .filter(([_, attr]) => attr.value !== "" && attr.attributeValueId)
-    .map(([id, attr]) => ({
-      attributeDefinitionId: Number(id),
-      attributeValueId: Number(attr.attributeValueId),
-      value: attr.value
-    }));
-}, { deep: true });
+
+
+        this.resetForm();
+        return createdProduct;
+
+      } catch (err) {
+        console.error("Error submitting form:", err);
+        this.$bvToast.toast(
+          'Error creating product: ' + (err.message || 'Please try again.'),
+          {
+            title: 'Error',
+            variant: 'danger',
+            solid: true,
+            autoHideDelay: 5000,
+            toaster: 'b-toaster-top-right',
+          }
+        );
+        throw err;
+      }
+    },
+
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (!file.type.match('image.*')) {
+          this.$bvToast.toast('Please select an image file', {
+            title: 'Invalid File',
+            variant: 'warning',
+            solid: true
+          });
+          event.target.value = '';
+          return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          this.$bvToast.toast('File size should not exceed 5MB', {
+            title: 'File Too Large',
+            variant: 'warning',
+            solid: true
+          });
+          event.target.value = '';
+          return;
+        }
+        this.product.image = file;
+      }
+    },
+
+    removeImage() {
+      this.product.image = null;
+      const fileInput = document.getElementById('file-upload');
+      if (fileInput) {
+        fileInput.value = '';
+      }
+    },
+
+    resetForm() {
+      this.product = {
+        name: "",
+        description: "",
+        originalPrice: null,
+        currentPrice: null,
+        categoryId: null,
+        subCategoryId: null,
+        rating: null,
+        tag: "",
+        sku: "",
+        brand: "",
+        availability: true,
+        discountPrice: null,
+        discountPercent: null,
+        additionalInformation: "",
+        attributes: [],
+        shippingInfo: [],
+        image: null
+      };
+      this.attributeValues = {};
+      this.attributeOptions = {};
+    },
+
+    addShippingInfo() {
+      if (this.selectedShippingOption && !this.product.shippingInfo.includes(this.selectedShippingOption)) {
+        this.product.shippingInfo.push(this.selectedShippingOption);
+        this.selectedShippingOption = "";
+      }
+    },
+
+    removeShippingInfo(option) {
+      this.product.shippingInfo = this.product.shippingInfo.filter(o => o !== option);
+    },
+
+    updateAttributeValue(attributeId, value, selectedOption) {
+      if (this.attributeValues[attributeId]) {
+        this.$set(this.attributeValues, attributeId, {
+          ...this.attributeValues[attributeId],
+          value: value,
+          attributeValueId: selectedOption?.attributeValueId
+        });
+      }
+    }
+  }
+};
 </script>
 
 

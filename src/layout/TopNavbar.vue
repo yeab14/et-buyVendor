@@ -1,62 +1,116 @@
-<!-- Top Bar -->
 <template>
-  <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-
-      <!-- Logo with Animated Glow -->
-      <router-link class="navbar-brand" to="/vendor/overview">
-        <img src="img/et-buy.png" alt="">
-        <span class="brand-text">EtBuy Vendor Portal</span>
-      </router-link>
+  <nav
+    class="bg-etbuy-red-darken shadow-etbuy-light sticky top-0 z-50 font-public-sans select-none relative"
+    aria-label="Primary Navigation"
+  >
+    <div class="container mx-auto px-6 py-3 flex items-center justify-between">
       
+ 
+      <router-link
+        to="/vendor/overview"
+        class="flex items-center space-x-3 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded"
+      >
+        <img
+          src="img/et-buy.png"
+          alt="EtBuy Logo"
+          class="h-12 w-auto transition-transform duration-300 ease-in-out hover:scale-110 drop-shadow-md"
+          loading="lazy"
+          decoding="async"
+        />
+        <span
+          class="text-white text-xl font-extrabold tracking-widest uppercase border-l-4 border-etbuy-red-light pl-3 drop-shadow-xl select-text"
+        >
+          EtBuy Vendor Portal
+        </span>
+      </router-link>
 
-      <!-- Animated Toggler -->
-      <button type="button" class="navbar-toggler" @click="toggleSidebar">
-        <div class="animated-icon" :class="{ open: $sidebar.showSidebar }">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+     
+      <button
+        @click="toggleSidebar"
+        aria-label="Toggle menu"
+        aria-expanded="$sidebar.showSidebar.toString()"
+        class="sm:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-etbuy-red-light"
+      >
+        <span
+          :class="[
+            'block relative w-7 h-0.5 bg-white transition-transform duration-300 ease-in-out',
+            $sidebar.showSidebar ? 'rotate-45 top-2.5 absolute scale-110' : ''
+          ]"
+        ></span>
+        <span
+          :class="[
+            'block w-7 h-0.5 bg-white my-1 transition-opacity duration-300 ease-in-out',
+            $sidebar.showSidebar ? 'opacity-0' : 'opacity-100'
+          ]"
+        ></span>
+        <span
+          :class="[
+            'block relative w-7 h-0.5 bg-white transition-transform duration-300 ease-in-out',
+            $sidebar.showSidebar ? '-rotate-45 top-2.5 absolute scale-110' : ''
+          ]"
+        ></span>
       </button>
 
-      <div class="collapse navbar-collapse justify-content-end">
-        <ul class="navbar-nav ml-auto">
+  
+      <ul
+        class="hidden sm:flex items-center space-x-8 text-white text-sm font-semibold uppercase tracking-wide"
+      >
+       
+        <li class="relative group">
+          <button
+            @click.prevent="markNotificationRead"
+            aria-label="Notifications"
+            class="relative p-2 rounded-md hover:bg-etbuy-red-light focus:outline-none focus:ring-2 focus:ring-etbuy-red-light transition duration-300"
+          >
+            <i class="fas fa-bell fa-lg drop-shadow-sm"></i>
+            <span
+              v-if="notificationCount > 0"
+              class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs px-1.5 py-0.5 animate-pulse shadow-md"
+              aria-live="polite"
+            >
+              {{ notificationCount }}
+            </span>
+          </button>
+          
+        </li>
 
-          <!-- Interactive Search Bar -->
-          <!-- <li class="nav-item search-item">
-            <input type="text" class="form-control search-input" placeholder="Search...">
-            <i class="nc-icon nc-zoom-split search-icon"></i>
-          </li> -->
+        
+        <li>
+          <router-link
+            to="/vendor/user"
+            class="flex items-center gap-2 hover:text-etbuy-red-light transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded select-text"
+          >
+            <i class="fas fa-user fa-lg drop-shadow-sm"></i>
+            <span class="truncate max-w-[12rem]" :title="vendorName">{{ vendorName }}</span>
+          </router-link>
+        </li>
 
-          <!-- Notification with Subtle Pulsing Animation -->
-          <li class="nav-item notification-item">
-            <a class="nav-link" href="#" @click="markNotificationRead">
-              <i class="nc-icon nc-bell-55"></i>
-              <span class="notification-count" v-if="notificationCount > 0">{{ notificationCount }}</span>
-            </a>
-          </li>
+  
+        <li>
+          <button
+            @click.prevent="logout"
+            class="flex items-center gap-2 hover:text-etbuy-red-light transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded"
+            aria-label="Logout"
+          >
+            <i class="fas fa-power-off fa-lg drop-shadow-sm"></i> Logout
+          </button>
+        </li>
 
-          <!-- Profile Link -->
-          <li class="nav-item">
-            <router-link class="nav-link profile-link" to="/vendor/user">
-              <i class="nc-icon nc-single-02"></i>Profile
-            </router-link>
-          </li>
-
-          <!-- Logout Button -->
-          <li class="nav-item">
-            <router-link class="nav-link logout-link" to="/vendor/login">
-              <i class="nc-icon nc-button-power"></i>Logout
-            </router-link>
-          </li>
-
-          <!-- Time Display -->
-          <li class="nav-item time">
-            <span>{{ formattedTime }}</span>
-          </li>
-        </ul>
-      </div>
+        
+        <li
+          class="text-etbuy-white-transparent font-mono text-xs px-4 py-1 border border-etbuy-white-transparent rounded select-none backdrop-blur-sm bg-etbuy-dark-glass"
+          aria-live="polite"
+        >
+          {{ formattedTime }}
+        </li>
+      </ul>
     </div>
+
+    
+    <div
+      aria-hidden="true"
+      class="absolute bottom-0 left-0 w-full h-1 rounded-t-lg bg-gradient-to-r from-etbuy-red-light via-etbuy-red-dark to-etbuy-red-light animate-gradient-x"
+    ></div>
   </nav>
 </template>
 
@@ -66,33 +120,66 @@ export default {
     return {
       currentTime: this.getCurrentTime(),
       notificationCount: 5,
+      vendor: null,
     };
+  },
+  computed: {
+    vendorName() {
+      return this.vendor
+        ? `${this.vendor.firstName} ${this.vendor.lastName} (${this.vendor.businessName})`
+        : "Profile";
+    },
+    formattedTime() {
+      return this.currentTime;
+    },
   },
   methods: {
     toggleSidebar() {
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
     },
     markNotificationRead() {
-      console.log("Notification clicked");
       this.notificationCount = 0;
     },
     getCurrentTime() {
       const date = new Date();
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      const seconds = String(date.getSeconds()).padStart(2, '0');
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      const seconds = String(date.getSeconds()).padStart(2, "0");
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
       const month = monthNames[date.getMonth()];
       const year = date.getFullYear();
       return `${month} ${year} | ${hours}:${minutes}:${seconds}`;
     },
-  },
-  computed: {
-    formattedTime() {
-      return this.currentTime;
+    logout() {
+      this.vendor = null;
+      localStorage.removeItem("vendorData");
+      this.$router.push("/vendor/login");
     },
   },
   mounted() {
+    const vendorData = localStorage.getItem("vendorData");
+    if (vendorData) {
+      try {
+        const sessionData = JSON.parse(vendorData);
+        this.vendor = sessionData.vendor;
+      } catch (error) {
+        console.error("Error parsing vendor data:", error);
+      }
+    }
+
     setInterval(() => {
       this.currentTime = this.getCurrentTime();
     }, 1000);
@@ -101,279 +188,47 @@ export default {
 </script>
 
 <style scoped>
-/* Global Styles */
-.navbar {
-  background-color: #ee5858;
-  color: #fff;
-  font-family: 'Arial', sans-serif;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  padding: 15px 20px;
-  position: relative; /* Required for pseudo-element */
-  z-index: 10; /* Ensure navbar is above content */
-}
-
-.container-fluid {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-/* Animated Background Line */
-.navbar::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 3px;
-  background-size: 200% auto;
-  animation: animateGlow 4s linear infinite;
-  border-radius: 3px;
-}
-
-@keyframes animateGlow {
+@keyframes gradient-x {
   0% {
-    background-position: right center;
-  }
-  100% {
-    background-position: left center;
-  }
-}
-
-/* Logo & Brand Styling */
-.navbar-brand {
-  display: flex;
-  align-items: center;
-  font-size: 24px;
-  font-weight: 700;
-  color: #fff !important;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  position: relative; /* For logo pulse */
-}
-
-.logo {
-  height: 45px;
-  margin-right: 10px;
-  transition: transform 0.3s ease;
-}
-
-/* Pulse effect on logo hover */
-.navbar-brand:hover .logo {
-  transform: scale(1.1);
-  animation: pulse 1.5s ease infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
+    background-position: 0% 50%;
   }
   50% {
-    transform: scale(1.1);
-  }
-}
-
-.brand-text {
-  font-size: 16px;
-  color: #fff !important;
-  padding: 12px 18px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
-    margin-left:1vh; 
-}
-
-
-/* Search Input */
-.search-item {
-  position: relative;
-  margin-right: 15px;
-}
-
-.search-input {
-  border-radius: 25px;
-  padding: 8px 35px 8px 15px;
-  border: none;
-  outline: none;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  transition: background-color 0.3s ease;
-  width: 180px; /* Initial width */
-}
-
-.search-input:focus {
-  background-color: rgba(255, 255, 255, 0.4);
-  width: 220px; /* Expand on focus */
-}
-
-.search-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #fff;
-  opacity: 0.7;
-  cursor: pointer;
-}
-
-/* Navbar Items */
-.navbar-nav .nav-item .nav-link {
-  color: #fff !important;
-  font-size: 16px;
-  padding: 12px 18px;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-}
-
-.navbar-nav .nav-item .nav-link:hover {
-  transform: translateY(-3px);
-  background-color: rgba(255, 255, 255, 0.25);
-  border-radius: 8px;
-  font-weight: 600;
-}
-
-.navbar-nav .nav-item i {
-  margin-right: 8px;
-  font-size: 1.1em;
-  vertical-align: middle;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* Notification Icon */
-.notification-item {
-  position: relative;
-}
-
-.notification-count {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: #ff4444;
-  color: white;
-  font-size: 0.7em;
-  padding: 2px 6px;
-  border-radius: 50%;
-  animation: pulseNotification 2s ease infinite;
-}
-
-@keyframes pulseNotification {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
+    background-position: 100% 50%;
   }
   100% {
-    transform: scale(1);
+    background-position: 0% 50%;
   }
 }
 
-/* Profile and Logout Links */
-.profile-link,
-.logout-link {
-  transition: color 0.3s ease, transform 0.3s ease;
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 4s ease infinite;
 }
 
-.profile-link:hover,
-.logout-link:hover {
-  color: #ffcd39 !important;
-  transform: translateY(-2px);
+
+/* Underline animation with !important */
+.hover-underline {
+  position: relative !important;
+  overflow: hidden !important;
 }
 
-/* Time Display */
-.navbar-nav .nav-item.time {
-  font-size: 16px;
-  color: #fff !important;
-  padding: 12px 18px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+.hover-underline::after {
+  content: "" !important;
+  position: absolute !important;
+  width: 100% !important;
+  height: 2px !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  background-color: currentColor !important;
+  transform: scaleX(0) !important;
+  transform-origin: right !important;
+  transition: transform 0.3s ease !important;
 }
 
-/* Navbar Toggler - Animated Icon */
-.animated-icon {
-  width: 30px;
-  height: 20px;
-  position: relative;
-  margin: 0px;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  transform: rotate(0deg);
-  -webkit-transition: .5s ease-in-out;
-  -moz-transition: .5s ease-in-out;
-  -o-transition: .5s ease-in-out;
-  transition: .5s ease-in-out;
-  cursor: pointer;
+.hover-underline:hover::after,
+.hover-underline:focus::after {
+  transform: scaleX(1) !important;
+  transform-origin: left !important;
 }
 
-.animated-icon span {
-  display: block;
-  position: absolute;
-  height: 3px;
-  width: 100%;
-  background: #fff;
-  border-radius: 9px;
-  opacity: 1;
-  left: 0;
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  transform: rotate(0deg);
-  -webkit-transition: .25s ease-in-out;
-  -moz-transition: .25s ease-in-out;
-  -o-transition: .25s ease-in-out;
-  transition: .25s ease-in-out;
-}
-
-.animated-icon span:nth-child(1) {
-  top: 0px;
-}
-
-.animated-icon span:nth-child(2),
-.animated-icon span:nth-child(3) {
-  top: 10px;
-}
-
-.animated-icon span:nth-child(3) {
-  top: 20px;
-}
-
-.animated-icon.open span:nth-child(1) {
-  top: 10px;
-  -webkit-transform: rotate(135deg);
-  -moz-transform: rotate(135deg);
-  -o-transform: rotate(135deg);
-  transform: rotate(135deg);
-}
-
-.animated-icon.open span:nth-child(2) {
-  opacity: 0;
-  left: -60px;
-}
-
-.animated-icon.open span:nth-child(3) {
-  top: 10px;
-  -webkit-transform: rotate(-135deg);
-  -moz-transform: rotate(-135deg);
-  -o-transform: rotate(-135deg);
-  transform: rotate(-135deg);
-}
-
-/* Responsiveness */
-@media (max-width: 768px) {
-  .search-item {
-    display: none;
-  }
-
-  .navbar-brand {
-    font-size: 22px;
-  }
-
-  .logo {
-    height: 40px;
-  }
-}
 </style>
