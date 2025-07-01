@@ -77,7 +77,7 @@
         
         <li>
           <router-link
-            to="/vendor/user"
+            to="/vendor/StoreSetting"
             class="flex items-center gap-2 hover:text-etbuy-red-light transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded select-text"
           >
             <i class="fas fa-user fa-lg drop-shadow-sm"></i>

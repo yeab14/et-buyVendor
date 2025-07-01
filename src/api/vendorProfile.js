@@ -6,7 +6,7 @@ import apiClient from '@/axios/axios';
  * @returns {Promise<Object>} Vendor data
  * @throws {Error} If vendorId is missing or request fails
  */
-const fetchVendorProfile = async (vendorId) => {
+export const fetchVendorProfile = async (vendorId) => {
   if (!vendorId) {
     throw new Error('Vendor ID is required');
   }
@@ -25,4 +25,54 @@ const fetchVendorProfile = async (vendorId) => {
   }
 };
 
-export default fetchVendorProfile;
+
+export const updateVendorProfile = async (vendorId, profileData, photoFile = null, bannerFile = null) => {
+    if (!vendorId) {
+      throw new Error('Vendor ID is required for profile update.');
+    }
+  
+    const formData = new FormData();
+  
+    // Must match backend @RequestPart("profile")
+    formData.append(
+      'profile',
+      new Blob([JSON.stringify(profileData)], { type: 'application/json' })
+    );
+  
+    // Must match backend @RequestPart("photo")
+    if (photoFile) formData.append('photo', photoFile);
+  
+    // Must match backend @RequestPart("banner")
+    if (bannerFile) formData.append('banner', bannerFile);
+  
+    let token;
+    try {
+      const session = JSON.parse(localStorage.getItem('vendorSession'));
+      token = session?.jwt;
+      if (!token) throw new Error();
+    } catch {
+      throw new Error('Authorization token not found or invalid session.');
+    }
+  
+    try {
+      const { data } = await apiClient.put(
+        `/vendor/profile/update?vendorId=${vendorId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      const errMsg =
+        error?.response?.data?.message ||
+        error?.response?.data ||
+        error?.message ||
+        'Failed to update vendor profile.';
+      throw new Error(errMsg);
+    }
+  };
+  
