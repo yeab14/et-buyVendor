@@ -11,7 +11,7 @@
         class="flex items-center space-x-3 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded"
       >
         <img
-          src="img/et-buy.png"
+          src="/img/et-buy.png"
           alt="EtBuy Logo"
           class="h-12 w-auto transition-transform duration-300 ease-in-out hover:scale-110 drop-shadow-md"
           loading="lazy"
@@ -77,7 +77,7 @@
         
         <li>
           <router-link
-            to="/vendor/user"
+            to="/vendor/StoreSetting"
             class="flex items-center gap-2 hover:text-etbuy-red-light transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded select-text"
           >
             <i class="fas fa-user fa-lg drop-shadow-sm"></i>
@@ -164,10 +164,12 @@ export default {
       return `${month} ${year} | ${hours}:${minutes}:${seconds}`;
     },
     logout() {
-      this.vendor = null;
-      localStorage.removeItem("vendorData");
-      this.$router.push("/vendor/login");
-    },
+  this.vendor = null;
+  localStorage.removeItem("vendorSession");
+  localStorage.removeItem("token")
+  this.$router.push("/vendor/login");
+}
+
   },
   mounted() {
     const vendorData = localStorage.getItem("vendorData");
