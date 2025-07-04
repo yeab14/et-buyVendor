@@ -4,7 +4,7 @@
 
       <!-- Left Branding Panel -->
       <div class="bg-gradient-to-br from-custom-etbuy-red-dark to-etbuy-red-darken text-etbuy-text-light font-public-sans flex flex-col items-center justify-center p-12 lg:p-16 text-center space-y-4">
-        <img src="img/et-buy.png" alt="EtBuy Logo" class="w-24 md:w-28 lg:w-32 mb-4 drop-shadow-lg" />
+        <img src="/img/et-buy.png" alt="EtBuy Logo" class="w-24 md:w-28 lg:w-32 mb-4 drop-shadow-lg" />
         <h2 class="text-3xl md:text-4xl font-bold tracking-wide leading-snug drop-shadow-sm">
           Join EtBuy as a Vendor
         </h2>
@@ -42,7 +42,7 @@
                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-etbuy-red-dark focus:outline-none transition duration-200"
                 />
                 <img
-                  src="img/EyeOpen.jpg"
+                  src="/img/EyeOpen.jpg"
                   alt="Show Password"
                   class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-70 hover:opacity-100 cursor-pointer transition"
                   @click="togglePassword('password')"
@@ -59,7 +59,7 @@
                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-etbuy-red-dark focus:outline-none transition duration-200"
                 />
                 <img
-                  src="img/EyeOpen.jpg"
+                  src="/img/EyeOpen.jpg"
                   alt="Show Password"
                   class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-70 hover:opacity-100 cursor-pointer transition"
                   @click="togglePassword('confirmPassword')"

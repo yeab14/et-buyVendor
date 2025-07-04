@@ -7,14 +7,14 @@ export const registerVendor = async (vendorData) => {
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
     }
-    localStorage.setItem("vendorData", JSON.stringify(response.data));
+   
+    localStorage.setItem("vendorSession", JSON.stringify(response.data));
     
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
   }
 };
-
 
 export const loginVendor = async (loginData) => {
   try {

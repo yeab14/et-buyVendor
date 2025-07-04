@@ -11,7 +11,7 @@
         class="flex items-center space-x-3 focus:outline-none focus:ring-2 focus:ring-etbuy-red-light rounded"
       >
         <img
-          src="img/et-buy.png"
+          src="/img/et-buy.png"
           alt="EtBuy Logo"
           class="h-12 w-auto transition-transform duration-300 ease-in-out hover:scale-110 drop-shadow-md"
           loading="lazy"
@@ -164,10 +164,12 @@ export default {
       return `${month} ${year} | ${hours}:${minutes}:${seconds}`;
     },
     logout() {
-      this.vendor = null;
-      localStorage.removeItem("vendorData");
-      this.$router.push("/vendor/login");
-    },
+  this.vendor = null;
+  localStorage.removeItem("vendorSession");
+  localStorage.removeItem("token")
+  this.$router.push("/vendor/login");
+}
+
   },
   mounted() {
     const vendorData = localStorage.getItem("vendorData");

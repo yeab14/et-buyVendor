@@ -6,7 +6,7 @@
 
 <div class="bg-gradient-to-br from-custom-etbuy-red-dark to-etbuy-red-darken text-etbuy-text-light font-public-sans flex flex-col items-center justify-center p-12 lg:p-16 text-center space-y-4">
   <img
-    src="img/et-buy.png"
+    src="/img/et-buy.png"
     alt="EtBuy Logo"
     class="w-24 md:w-28 lg:w-32 mb-4 drop-shadow-lg"
   />
@@ -49,7 +49,7 @@
                     placeholder="Password"
                   />
                   <img
-                    src="img/EyeOpen.jpg"
+                    src="/img/EyeOpen.jpg"
                     alt="Show Password"
                     class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-70 hover:opacity-100 cursor-pointer transition"
                     @click="togglePassword"
