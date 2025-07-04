@@ -1,8 +1,10 @@
 <template>
-    <section
-      class="w-full max-w-6xl mx-auto px-6 sm:px-10 py-10 sm:py-16 rounded-3xl border border-etbuy-white-transparent-border bg-etbuy-white-transparent backdrop-blur-xl shadow-[0_4px_60px_rgba(0,0,0,0.05)] transition-all duration-500 font-sans"
-      aria-label="Membership Requests Dashboard"
-    >
+    <div class="follower-dashboard bg-etbuy-creamywhite text-etbuy-black font-public-sans min-h-screen p-8">
+        <main
+          class="max-w-4xl mx-auto bg-etbuy-white-transparent backdrop-blur-lg shadow-etbuy-light rounded-3xl p-10 space-y-8 border border-etbuy-red-light/20"
+          role="main"
+          aria-label="Follower Dashboard"
+        >
       <!-- Header -->
       <header class="text-center space-y-3 pb-6 border-b border-etbuy-red-light/30">
         <h1
@@ -19,7 +21,7 @@
   
       <!-- Status Filter Tabs -->
       <nav
-        class="flex justify-center gap-6 border-b border-etbuy-red-light/30 pb-4"
+        class="flex justify-center gap-6 border-b border-etbuy-red-light/30 pb-4 mt-4"
         role="tablist"
         aria-label="Filter membership requests by status"
       >
@@ -79,17 +81,15 @@
         </div>
   
         <div class="flex items-center gap-3">
-          <label for="sortSelect" class="text-etbuy-red-dark font-semibold select-none">Sort by:</label>
-          <select
-            id="sortSelect"
-            v-model="sortBy"
-            class="bg-etbuy-white-transparent-light border border-etbuy-red-light rounded-md px-3 py-2 text-etbuy-black focus:ring-etbuy-red-dark focus:border-etbuy-red-dark transition-all duration-300"
-            aria-label="Sort membership requests"
-          >
-            <option value="dateDesc">Newest First</option>
-            <option value="dateAsc">Oldest First</option>
+            <i class="fas fa-sort text-etbuy-red-dark" aria-hidden="true"></i>
+            <label for="sort-select" class="sr-only">Sort Membership Requests by</label>
+            <select
+              id="sort-select"
+              v-model="sortBy"
+              class="bg-etbuy-white-transparent-light border border-etbuy-red-light rounded-md px-3 py-1 text-etbuy-black focus:ring-etbuy-red-dark focus:border-etbuy-red-dark transition-all duration-300"
+            >
+            <option value="dateDesc">Most Recent</option>
             <option value="nameAsc">Name (A-Z)</option>
-            <option value="nameDesc">Name (Z-A)</option>
           </select>
         </div>
       </div>
@@ -152,7 +152,7 @@
                   {{ request.userEmail }}
                 </p>
                 <p class="text-sm text-gray-700 leading-snug line-clamp-2" :title="request.message">
-                  {{ request.message || 'No message provided.' }}
+                  {{ request.userBillingAddress }}
                 </p>
                 <p class="text-xs text-etbuy-red-darken mt-1">
                   Requested on:
@@ -203,7 +203,8 @@
           <p class="text-md mt-2">Try changing your filters or search terms.</p>
         </div>
       </section>
-    </section>
+    </main>
+</div>
   </template>
   
   <script>
@@ -241,17 +242,12 @@
         }
   
         switch (this.sortBy) {
-          case 'dateAsc':
-            filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-            break;
-          case 'dateDesc':
-            filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            break;
+            case 'dateDesc':
+    filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    break;
+
           case 'nameAsc':
             filtered.sort((a, b) => a.userFullName.localeCompare(b.userFullName));
-            break;
-          case 'nameDesc':
-            filtered.sort((a, b) => b.userFullName.localeCompare(a.userFullName));
             break;
         }
   
@@ -265,16 +261,21 @@
         try {
           const data = await fetchMembershipRequests();
   
-          // Assume backend returns userFullName, userEmail, userAvatar in each request
-          this.requests = data.map(req => ({
-            id: req.id,
-            status: req.status,
-            message: req.message || '',
-            createdAt: req.createdAt,
-            userFullName: req.userFullName || `User ${req.userId}`,
-            userEmail: req.userEmail || `user${req.userId}@example.com`,
-            userAvatar: req.userAvatar || `https://i.pravatar.cc/150?u=${req.userId}`,
-          }));
+      
+          this.requests = data.map(req => {
+  const user = req.user || {};
+  return {
+    id: req.id,
+    status: req.status,
+    message: req.message || '',
+    createdAt: req.createdAt,
+    userFullName: user.fullName || `User ${user.id}`,
+    userEmail: user.email || `user${user.id}@example.com`,
+    userBillingAddress: user.billingAddress || `Addis Ababa, Ethiopia`,
+    userAvatar: user.profilePhotoUrl || '/images/default-profile.svg', 
+  };
+});
+
         } catch (err) {
           this.error = err.message || 'Failed to load membership requests.';
         } finally {
