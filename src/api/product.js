@@ -11,7 +11,7 @@ async function createProduct(formData) {
       throw new Error("Authentication required. Please log in.");
     }
 
-    const response = await apiClient.post("/products", formData, {
+    const response = await apiClient.post("/vendor/products", formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${token}`

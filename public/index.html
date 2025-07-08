@@ -1,76 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Basic Meta Tags -->
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0" />
-
-  <title>Post Your Product | EtBuy Vendor Panel</title>
-
-  <!-- Canonical -->
-  <link rel="canonical" href="https://vendor.etbuy.com/post-product" />
-
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Easily list your products on EtBuy using our secure, intuitive vendor dashboard. Join thousands of sellers boosting their reach." />
-  <meta name="keywords" content="EtBuy, Vendor Panel, Post Product, E-commerce, Seller Dashboard, Online Store, Sell Online" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>EtBuy Vendor Panel - Manage Your Store & Products</title>
+  <meta name="description" content="Manage your store, post products, and boost sales efficiently with EtBuy Vendor Panel. Secure, intuitive, and powerful dashboard for sellers." />
+  <meta name="keywords" content="EtBuy, Vendor Panel, E-commerce, Seller Dashboard, Post Product, Manage Store, Online Sales" />
   <meta name="author" content="EtBuy Team" />
   <meta name="robots" content="index, follow" />
-  
-  <!-- Open Graph (Facebook, LinkedIn, etc.) -->
-  <meta property="og:title" content="EtBuy Vendor Panel - Post Your Product" />
-  <meta property="og:description" content="Boost your online sales by posting products on EtBuy. Fast, secure and seller-friendly." />
-  <meta property="og:image" content="https://etbuy.com/assets/etbuy-og-image.jpg" />
-  <meta property="og:url" content="https://vendor.etbuy.com/post-product" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://vendor.etbuy.com/" />
+
+  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
+  <meta property="og:title" content="EtBuy Vendor Panel - Manage Your Store & Products" />
+  <meta property="og:description" content="Manage your store, post products, and boost sales efficiently with EtBuy Vendor Panel." />
+  <meta property="og:url" content="https://vendor.etbuy.com/" />
   <meta property="og:site_name" content="EtBuy Vendor" />
+  <meta property="og:image" content="https://etbuy.com/assets/etbuy-og-image.jpg" />
+  <meta property="og:image:alt" content="EtBuy Vendor Panel Logo" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Post Your Product | EtBuy Vendor" />
-  <meta name="twitter:description" content="List and manage your products through the EtBuy vendor dashboard." />
+  <meta name="twitter:title" content="EtBuy Vendor Panel - Manage Your Store & Products" />
+  <meta name="twitter:description" content="Manage your store, post products, and boost sales efficiently with EtBuy Vendor Panel." />
   <meta name="twitter:image" content="https://etbuy.com/assets/etbuy-twitter-card.jpg" />
+  <meta name="twitter:image:alt" content="EtBuy Vendor Panel Logo" />
+  <meta name="twitter:site" content="@EtBuyOfficial" />
+  <meta name="twitter:creator" content="@EtBuyTeam" />
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "EtBuy Vendor - Post a Product",
-      "url": "https://vendor.etbuy.com/post-product",
-      "description": "EtBuy Vendor Panel allows merchants to post and manage products efficiently.",
-      "publisher": {
-        "@type": "Organization",
-        "name": "EtBuy",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://etbuy.com/assets/logo.png"
-        }
-      }
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "EtBuy Vendor",
+    "url": "https://vendor.etbuy.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://vendor.etbuy.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
     }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "EtBuy",
+    "url": "https://etbuy.com",
+    "logo": "https://etbuy.com/assets/logo.png",
+    "sameAs": [
+      "https://www.facebook.com/EtBuy",
+      "https://twitter.com/EtBuyOfficial",
+      "https://www.linkedin.com/company/etbuy"
+    ]
+  }
   </script>
 
   <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/et-buy.ico" />
   <link rel="shortcut icon" href="/et-buy.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/et-buy.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
 
-  <!-- Preconnect for Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
-
-  <!-- Font Awesome -->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-dyZ9PrvTjF8HjzEjvx9FZkEJgEKzgz2FXnENZQ9cCFh+MFXK+1gvdFMEG0G9Reo2jDTe9NxN2DjYBljG1Ic2wg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <!-- PWA enhancements (optional) -->
+  <!-- Theme & Mobile Web App -->
   <meta name="theme-color" content="#ff6600" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="EtBuy Vendor" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Fonts with font-display swap for performance -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome (use latest stable version) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pzw1k1v2RzQv8Yx+6aZxq4zJrG2jZ0hZl+q4l9FlQ2P9+2J6vXoNQ9qJqXq3y9p1X6v4eN7G9X6e0y2lZ9ZqRg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Meta for SEO & Accessibility -->
+  <meta name="format-detection" content="telephone=no" />
+  <meta http-equiv="content-language" content="en" />
+  
+  <!-- Custom CSS (if any) -->
+  <!-- <link rel="stylesheet" href="/css/main.css" /> -->
 
 </head>
 <body>

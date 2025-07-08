@@ -418,11 +418,21 @@ Product Image
       <section class="col-span-full">
         <button
           type="submit"
+          :disabled="isSubmitting"
           class="w-full py-4 bg-etbuy-red-dark text-white font-semibold rounded-lg shadow-etbuy-button
                  hover:bg-etbuy-red-darken hover:shadow-etbuy-light-hover
-                 transform hover:-translate-y-0.5 transition duration-300 ease-in-out"
+                 transform hover:-translate-y-0.5 transition duration-300 ease-in-out flex justify-center items-center gap-3"
         >
-         Create Product
+          <template v-if="isSubmitting">
+            <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Creating...
+          </template>
+          <template v-else>
+            Create Product
+          </template>
         </button>
       </section>
       
@@ -475,7 +485,8 @@ export default {
       attributeValues: {},
       attributeOptions: {},
       shippingProviders: [],
-      selectedShippingOption: ""
+      selectedShippingOption: "",
+      isSubmitting: false
     };
   },
 
@@ -594,7 +605,9 @@ export default {
 
   methods: {
     async submitForm() {
+    
       try {
+        this.isSubmitting = true;
         if (!this.product.name || !this.product.categoryId || !this.product.subCategoryId) {
           this.$bvToast.toast('Please fill in all required fields', {
             title: 'Validation Error',
@@ -681,7 +694,9 @@ export default {
           }
         );
         throw err;
-      }
+      }  finally {
+    this.isSubmitting = false;
+  }
     },
 
     handleFileUpload(event) {

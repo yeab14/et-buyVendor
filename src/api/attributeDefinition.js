@@ -1,7 +1,8 @@
-import apiClient from '@/axios/axios';
+import publicApi from '@/axios/publicApi';
+
 const fetchAttributeDefinitionsBySubCategory = async (subCategoryId) => {
     try {
-        const response = await apiClient.get(`/attribute-definitions/subcategory/${subCategoryId}`);
+        const response = await publicApi.get(`/attribute-definitions/subcategory/${subCategoryId}`);
         return response.data;
     } catch (error) {
         if (error.response && error.response.data) {
