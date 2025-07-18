@@ -37,7 +37,7 @@
           <div class="absolute top-2 left-2 space-y-1">
             <span v-if="product.discountPercent"
                   class="bg-etbuy-orange text-white text-xs px-2 py-0.5 rounded shadow-etbuy-icon-hover">
-              -{{ product.discountPercent }}%
+              {{ product.discountPercent }}%
             </span>
             <span :class="[ 
                     'text-xs font-semibold px-2 py-0.5 rounded',

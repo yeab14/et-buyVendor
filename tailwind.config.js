@@ -29,6 +29,7 @@ module.exports = {
         'custom-etbuy-red-dark': '#8b0000',
         'etbuy-white': '#fff1f1',
         'etbuy-black': '#21201f', 
+        'etbuy-whatsapp': '#12a328',
         'etbuy-dark-glass': 'rgba(0, 0, 0, 0.5)',
         'etbuy-telegram': '#006699',
         'etbuy-whatsapp': '#1ebe5d',

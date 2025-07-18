@@ -253,23 +253,171 @@
       <h3
         class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
       >
-        Product Attributes
+        Product Variants
       </h3>
     
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div v-for="attribute in attributeDefinitions" :key="attribute.id" class="flex flex-col">
-          <label class="mb-2 font-medium text-etbuy-black/90">{{ attribute.name }}</label>
+        <div
+          v-for="attribute in attributeDefinitions"
+          :key="attribute.id"
+          class="flex flex-col"
+        >
+          <label class="mb-2 font-medium text-etbuy-black/90">
+            {{ attribute.name }}
+          </label>
           <DynamicInput
-            :inputType="attribute.inputType"
-            :value="attributeValues[attribute.id]?.value"
-            @update:modelValue="(value, selectedOption) => updateAttributeValue(attribute.id, value, selectedOption)"
+            inputType="MULTISELECT"
             :options="attributeOptions[attribute.id] || []"
+            :value="selectedAttributes[attribute.id] || []"
+            @update:modelValue="values => updateSelectedAttribute(attribute.id, values)"
             class="w-full px-4 py-3 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-creamywhite
                    focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
                    transition-colors duration-300 shadow-etbuy-button"
           />
         </div>
       </div>
+    
+      <!-- Variants Table -->
+      <table class="mt-8 w-full table-auto border border-etbuy-red-dark rounded-lg overflow-hidden shadow-md">
+        <thead class="bg-etbuy-red-dark text-etbuy-white">
+          <tr>
+            <th
+              v-for="attr in activeAttributeDefinitions"
+              :key="attr.id"
+              class="p-3 text-left border border-etbuy-red-darken font-semibold text-sm tracking-wide"
+            >
+              {{ attr.name }}
+            </th>
+            <th class="p-3 text-left border border-etbuy-red-darken font-semibold text-sm">SKU</th>
+            <th class="p-3 text-left border border-etbuy-red-darken font-semibold text-sm">Price</th>
+            <th class="p-3 text-left border border-etbuy-red-darken font-semibold text-sm">Stock</th>
+            <th class="p-3 text-left border border-etbuy-red-darken font-semibold text-sm">Image</th>
+            <th class="p-3 text-left border border-etbuy-red-darken font-semibold text-sm text-center">Remove</th>
+          </tr>
+        </thead>
+        <tbody class="bg-etbuy-creamywhite text-etbuy-black">
+          <tr
+            v-for="(variant, index) in variantCombinations"
+            :key="index"
+            class="hover:bg-light-salmon transition duration-150"
+          >
+            <!-- Attribute Values Columns -->
+            <td
+              v-for="attr in activeAttributeDefinitions"
+              :key="attr.id"
+              class="p-2 border border-etbuy-red-light text-sm"
+            >
+              {{ getVariantValue(variant, attr.id) }}
+            </td>
+    
+            <!-- SKU -->
+            <td class="p-2 border border-etbuy-red-light">
+              <input
+                type="text"
+                v-model="variantData[index].sku"
+                placeholder="SKU"
+                class="w-full px-2 py-1 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                       focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                       transition-colors duration-300 shadow-etbuy-button text-sm"
+              />
+            </td>
+    
+            <!-- Price -->
+            <td class="p-2 border border-etbuy-red-light">
+              <input
+                type="number"
+                v-model.number="variantData[index].price"
+                placeholder="Price"
+                class="w-full px-2 py-1 border border-etbuy-red-light rounded-md text-etbuy-black bg-etbuy-white
+                       focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark focus:border-etbuy-red-dark
+                       transition-colors duration-300 shadow-etbuy-button text-sm"
+                min="0"
+                step="0.01"
+              />
+            </td>
+    
+            
+           <!-- Stock -->
+<td class="p-2 border border-etbuy-red-light text-sm text-center">
+  <select
+    v-model.number="variantData[index].stock"
+    class="w-full px-3 py-1.5 rounded-full text-sm text-center font-medium
+           focus:outline-none focus:ring-2 appearance-none border
+           transition-colors duration-200"
+    :class="variantData[index].stock === 1 
+      ? 'bg-white text-etbuy-whatsapp border-etbuy-whatsapp focus:ring-etbuy-whatsapp' 
+      : 'bg-white text-etbuy-red-dark border-etbuy-red-dark focus:ring-etbuy-red-dark'"
+  >
+    <option :value="1" class="text-etbuy-whatsapp">Available</option>
+    <option :value="0" class="text-etbuy-red-dark">Out of Stock</option>
+  </select>
+</td>
+
+    
+            <!-- Image Upload -->
+            <td class="p-2 border border-etbuy-red-light">
+           <div
+  class="border-2 rounded-lg px-4 py-3 text-center cursor-pointer transition duration-200"
+  :class="variantData[index].image
+    ? 'border-solid bg-soft-peach border-etbuy-red-light'
+    : 'border-dashed border-etbuy-red-light'"
+>
+  <!-- hidden input with an unique id -->
+  <input
+    type="file"
+    :id="'variant-file-upload-' + index"
+    accept="image/*"
+    class="hidden"
+    @change="e => handleVariantImageUpload(e, index)"
+  />
+
+  <!-- label linked by 'for' attribute triggers file dialog on click -->
+  <label
+    :for="'variant-file-upload-' + index"
+    class="flex flex-col items-center gap-2 cursor-pointer"
+  >
+    <template v-if="!variantData[index].image">
+      <span class="text-xl font-bold text-etbuy-red-dark">+</span>
+      <span class="text-xs text-etbuy-red-dark">Upload</span>
+    </template>
+    <template v-else>
+      <img
+        :src="getImagePreviewUrl(variantData[index].image)"
+        alt="Variant Image Preview"
+        class="max-w-[80px] max-h-[80px] rounded-md shadow"
+      />
+      <button
+        type="button"
+        class="mt-1 bg-etbuy-red-dark text-white rounded px-2 py-1 text-xs hover:bg-custom-etbuy-red-dark transition"
+        @click.stop="removeVariantImage(index)"
+      >
+        Remove
+      </button>
+    </template>
+  </label>
+</div>
+
+
+
+            </td>
+            
+    
+            <!-- Remove row -->
+            <td class="p-2 border border-etbuy-red-light text-center">
+              <button
+                @click.prevent="removeVariantRow(index)"
+                aria-label="Remove variant row"
+                class="text-etbuy-red-dark hover:text-etbuy-red-darken transition-transform duration-300 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-etbuy-red-dark
+                       hover:scale-110 hover:shadow-lg"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4m-4 0a1 1 0 00-1 1v1h6V4a1 1 0 00-1-1m-4 0h4"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </section>
     
     
@@ -363,55 +511,57 @@ Shipping Information
 
 
       <!-- Image Upload Section -->
-      <section
-      class="col-span-full bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
-    >
-    <h3
+ <section
+  class="col-span-full bg-etbuy-white border border-etbuy-red-light rounded-xl p-6 hover:shadow-etbuy-light-hover transition-shadow duration-300"
+>
+  <h3
     class="font-public-sans text-lg font-semibold text-etbuy-red-darken uppercase mb-6 pb-2 border-b-2 border-etbuy-red tracking-wide"
   >
-Product Image
+    Product Image
   </h3>
-    
-      <div
-        class="border-2 rounded-xl p-8 text-center cursor-pointer transition-colors duration-300"
-        :class="product.image ? 'border-solid bg-soft-peach border-etbuy-red-light' : 'border-dashed border-etbuy-red-light'"
-        @click="$refs.fileInput.click()"
-      >
-        <input
-          ref="fileInput"
-          type="file"
-          @change="handleFileUpload"
-          accept="image/*"
-          class="hidden"
-          id="file-upload"
-        />
-        <label
-          for="file-upload"
-          class="flex flex-col items-center gap-4 text-etbuy-red-dark cursor-pointer select-none"
+
+  <div
+    class="border-2 rounded-xl p-8 text-center cursor-pointer transition-colors duration-300"
+    :class="product.image ? 'border-solid bg-soft-peach border-etbuy-red-light' : 'border-dashed border-etbuy-red-light'"
+  >
+    <!-- Hidden file input with unique id -->
+    <input
+      type="file"
+      id="product-file-upload"
+      accept="image/*"
+      class="hidden"
+      @change="handleFileUpload"
+    />
+
+    <!-- Label linked to input by 'for' toggles file selector on click -->
+    <label
+      for="product-file-upload"
+      class="flex flex-col items-center gap-4 text-etbuy-red-dark cursor-pointer select-none"
+    >
+      <template v-if="!product.image">
+        <span class="text-4xl font-thin">+</span>
+        <span class="font-medium">Choose Image</span>
+        <span class="text-xs text-gray-500">Max size: 5MB</span>
+      </template>
+      <template v-else>
+        <img
+        :src="getImagePreviewUrl(product.image)"
+        alt="Product Image Preview"
+        class="max-w-[200px] max-h-[200px] rounded-lg shadow-etbuy-light mx-auto"
+      />
+        <span class="block truncate mt-2 text-etbuy-black font-medium">{{ product.image.name }}</span>
+        <button
+          type="button"
+          class="mt-4 bg-etbuy-red-dark text-white rounded-md px-4 py-2 text-sm hover:bg-custom-etbuy-red-dark transition"
+          @click.stop="removeImage"
         >
-          <template v-if="!product.image">
-            <span class="text-4xl font-thin">+</span>
-            <span class="font-medium">Choose Image</span>
-            <span class="text-xs text-gray-500">Max size: 5MB</span>
-          </template>
-          <template v-else>
-            <img
-              :src="imagePreviewUrl"
-              alt="Preview"
-              class="max-w-[200px] max-h-[200px] rounded-lg shadow-etbuy-light mx-auto"
-            />
-            <span class="block truncate mt-2 text-etbuy-black font-medium">{{ product.image.name }}</span>
-            <button
-              type="button"
-              class="mt-4 bg-etbuy-red-dark text-white rounded-md px-4 py-2 text-sm hover:bg-custom-etbuy-red-dark transition"
-              @click.stop="removeImage"
-            >
-              Remove Image
-            </button>
-          </template>
-        </label>
-      </div>
-    </section>
+          Remove Image
+        </button>
+      </template>
+    </label>
+  </div>
+</section>
+
     
 
       <!-- Submit Button -->
@@ -440,7 +590,6 @@ Product Image
     </form>
   </div>
 </template>
-
 <script>
 import * as Yup from "yup";
 import fetchCategories from "@/api/categories";
@@ -477,33 +626,65 @@ export default {
         additionalInformation: "",
         attributes: [],
         shippingInfo: [],
-        image: null
+        image: null 
       },
       categories: [],
       subCategories: [],
       attributeDefinitions: [],
+      selectedAttributes: {},
+      variantData: [], 
       attributeValues: {},
       attributeOptions: {},
       shippingProviders: [],
       selectedShippingOption: "",
-      isSubmitting: false
+      isSubmitting: false,
     };
   },
 
   computed: {
-    imagePreviewUrl() {
-      return this.product.image ? URL.createObjectURL(this.product.image) : '';
+    activeAttributeDefinitions() {
+      return this.attributeDefinitions;
     },
+    variantCombinations() {
+      const keys = Object.keys(this.selectedAttributes);
+      if (keys.length === 0) return [];
 
-    providerDetails() {
-      if (!this.selectedShippingOption) return null;
-      return this.shippingProviders.find(
-        provider => provider.name === this.selectedShippingOption
-      );
+      const filteredKeys = keys.filter(k => Array.isArray(this.selectedAttributes[k]) && this.selectedAttributes[k].length > 0);
+      if (filteredKeys.length === 0) return [];
+
+      const valuesArray = filteredKeys.map(k => this.selectedAttributes[k].map(v => ({ attributeId: k, value: v })));
+
+      return this.cartesianProduct(valuesArray);
     }
   },
 
+  imagePreviewUrl() {
+    if (!this.product.image) return null;
+    
+    if (typeof this.product.image === 'string') {
+      return this.product.image;
+    }
+    return URL.createObjectURL(this.product.image);
+  },
+
+  
+
   watch: {
+    'product.currentPrice'(newPrice) {
+      if (newPrice == null) return;
+      this.variantData.forEach((variant, index) => {
+        if (variant.price == null || variant.price === 0) {
+          this.$set(this.variantData[index], 'price', newPrice);
+        }
+      });
+    },
+    variantCombinations: {
+      immediate: true,
+      handler(newCombinations) {
+        this.syncVariantData(newCombinations);
+        this.initializeVariantPrices();
+      }
+    },
     'product.categoryId': {
       async handler(newCategoryId) {
         if (newCategoryId) {
@@ -512,11 +693,12 @@ export default {
             this.subCategories = Array.isArray(response) 
               ? response 
               : response.subCategories || [];
-            
             this.product.subCategoryId = null;
             this.attributeDefinitions = [];
             this.attributeValues = {};
             this.attributeOptions = {};
+            this.selectedAttributes = {};
+            this.variantData = [];
           } catch (error) {
             console.error("Error fetching subcategories:", error);
             this.subCategories = [];
@@ -524,10 +706,14 @@ export default {
         } else {
           this.subCategories = [];
           this.product.subCategoryId = null;
+          this.attributeDefinitions = [];
+          this.attributeValues = {};
+          this.attributeOptions = {};
+          this.selectedAttributes = {};
+          this.variantData = [];
         }
       }
     },
-
     'product.subCategoryId': {
       async handler(newSubCategoryId) {
         if (newSubCategoryId) {
@@ -537,6 +723,8 @@ export default {
             
             this.attributeOptions = {};
             this.attributeValues = {};
+            this.selectedAttributes = {};
+            this.variantData = [];
 
             await Promise.all(this.attributeDefinitions.map(async (attribute) => {
               try {
@@ -567,15 +755,18 @@ export default {
             this.attributeDefinitions = [];
             this.attributeValues = {};
             this.attributeOptions = {};
+            this.selectedAttributes = {};
+            this.variantData = [];
           }
         } else {
           this.attributeDefinitions = [];
           this.attributeValues = {};
           this.attributeOptions = {};
+          this.selectedAttributes = {};
+          this.variantData = [];
         }
       }
     },
-
     attributeValues: {
       handler(newValues) {
         this.product.attributes = Object.entries(newValues)
@@ -604,8 +795,145 @@ export default {
   },
 
   methods: {
+    updateSelectedAttribute(attributeId, values) {
+      this.$set(this.selectedAttributes, attributeId, values);
+    },
+
+    cartesianProduct(arrays) {
+      return arrays.reduce((acc, curr) => {
+        return acc.flatMap(a => curr.map(b => [...a, b]));
+      }, [[]]);
+    },
+
+    syncVariantData(combinations) {
+      while (this.variantData.length < combinations.length) {
+        this.variantData.push({ sku: '', price: this.product.currentPrice || 0, stock: 1, image: null });
+      }
+      while (this.variantData.length > combinations.length) {
+        this.variantData.pop();
+      }
+    },
+
+    getVariantValue(variant, attrId) {
+      const item = variant.find(v => String(v.attributeId) === String(attrId));
+      return item ? item.value : '-';
+    },
+
+    initializeVariantPrices() {
+      if (this.product.currentPrice == null) return;
+      this.variantData.forEach((variant, index) => {
+        if (variant.price == null || variant.price === 0) {
+          this.$set(this.variantData[index], 'price', this.product.currentPrice);
+        }
+      });
+    },
+
+    removeVariantRow(index) {
+      const variantToRemove = this.variantCombinations[index];
+      Object.entries(this.selectedAttributes).forEach(([attrId, values]) => {
+        if (!Array.isArray(values)) return;
+
+        const variantAttr = variantToRemove.find(v => String(v.attributeId) === String(attrId));
+        if (!variantAttr) return;
+
+        this.$set(
+          this.selectedAttributes,
+          attrId,
+          values.filter(val => val !== variantAttr.value)
+        );
+      });
+    },
+
+
+  triggerFileInput(index) {
+    const fileInputs = this.$refs.fileInputs;
+    if (fileInputs && fileInputs[index]) {
+      fileInputs[index].click();
+    } else {
+      console.warn(`No file input found at index ${index}`);
+    }
+  },
+
+
+  handleVariantImageUpload(event, index) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.$bvToast.toast('Please select a valid image file', {
+        title: 'Invalid File',
+        variant: 'warning',
+        solid: true,
+      });
+      event.target.value = '';
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      this.$bvToast.toast('Image size should not exceed 5MB', {
+        title: 'File Too Large',
+        variant: 'warning',
+        solid: true,
+      });
+      event.target.value = '';
+      return;
+    }
+
+    this.$set(this.variantData[index], 'image', file);
+  },
+ 
+  getImagePreviewUrl(image) {
+    if (!image) return null;
+    if (typeof image === 'string') return image;  
+    return URL.createObjectURL(image);           
+  },
+ 
+  removeVariantImage(index) {
+    this.$set(this.variantData[index], 'image', null);
+  },
+
+    handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    this.$bvToast.toast('Please select a valid image file', {
+      title: 'Invalid File',
+      variant: 'warning',
+      solid: true,
+    });
+    event.target.value = ''; 
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    this.$bvToast.toast('Image size should not exceed 5MB', {
+      title: 'File Too Large',
+      variant: 'warning',
+      solid: true,
+    });
+    event.target.value = '';
+    return;
+  }
+
+  this.product.image = file;
+},
+
+    removeImage() {
+      this.product.image = null;
+      const fileInput = document.getElementById('file-upload');
+      if (fileInput) {
+        fileInput.value = '';
+      }
+    },
+
+   
+
+    removeVariantImage(index) {
+      this.$set(this.variantData[index], 'image', null);
+    },
+
     async submitForm() {
-    
       try {
         this.isSubmitting = true;
         if (!this.product.name || !this.product.categoryId || !this.product.subCategoryId) {
@@ -623,10 +951,11 @@ export default {
             variant: 'danger',
             solid: true
           });
-          throw new Error('Missing image');
+          throw new Error('Missing main product image');
         }
 
-        const formattedProduct = {
+     
+        const productPayload = {
           name: this.product.name,
           description: this.product.description,
           originalPrice: Number(this.product.originalPrice),
@@ -654,29 +983,62 @@ export default {
             weight: 0.5,
             shippingTime: "5-7 business days"
           }))
+        
         };
 
+     
+        const variantsPayload = this.variantCombinations.map((variantAttrs, index) => {
+          const attributes = variantAttrs.map(({ attributeId, value }) => {
+            const attributeDefinitionId = Number(attributeId);
+            const optionList = this.attributeOptions[attributeDefinitionId] || [];
+            const attributeValueObj = optionList.find(opt => opt.label === value);
+            return {
+              attributeDefinitionId,
+              attributeValueId: attributeValueObj ? attributeValueObj.id : null,
+              attributeValue: value
+            };
+          }).filter(attr => attr.attributeValueId !== null);
+
+          return {
+            sku: this.variantData[index].sku,
+            price: this.variantData[index].price,
+            stock: this.variantData[index].stock,
+            image: undefined, // handled separately in FormData
+            attributes
+          };
+        });
+
+        productPayload.variants = variantsPayload;
+
+        // Prepare FormData for multipart upload
         const formData = new FormData();
-        formData.append('product', new Blob([JSON.stringify(formattedProduct)], {
-          type: 'application/json'
-        }));
-        formData.append('image', this.product.image);
+        formData.append('product', new Blob([JSON.stringify(productPayload)], { type: 'application/json' }));
 
+        // Append main product image file
+        if (this.product.image instanceof File) {
+          formData.append('image', this.product.image);
+        }
+
+        // Append each variant image file with unique keys recognized by backend
+        this.variantData.forEach((variant, idx) => {
+          if (variant.image instanceof File) {
+            formData.append(`variantImage${idx}`, variant.image);
+          }
+        });
+
+        // Send to backend
         const createdProduct = await createProduct(formData);
-        
-        // Show success toast
+
         this.$bvToast.toast(
-  '🎉 Success! Your product is now live on EtBuy. 🚀 Keep going — your journey to more sales and greater reach starts here! 💼',
-  {
-    title: '✅ Product Added Successfully!',
-    variant: 'success',
-    solid: true,
-    autoHideDelay: 5000,
-    toaster: 'b-toaster-top-right',
-  }
-);
-
-
+          '🎉 Success! Your product is now live on EtBuy. 🚀 Keep going — your journey to more sales and greater reach starts here! 💼',
+          {
+            title: '✅ Product Added Successfully!',
+            variant: 'success',
+            solid: true,
+            autoHideDelay: 5000,
+            toaster: 'b-toaster-top-right',
+          }
+        );
 
         this.resetForm();
         return createdProduct;
@@ -694,41 +1056,8 @@ export default {
           }
         );
         throw err;
-      }  finally {
-    this.isSubmitting = false;
-  }
-    },
-
-    handleFileUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        if (!file.type.match('image.*')) {
-          this.$bvToast.toast('Please select an image file', {
-            title: 'Invalid File',
-            variant: 'warning',
-            solid: true
-          });
-          event.target.value = '';
-          return;
-        }
-        if (file.size > 5 * 1024 * 1024) {
-          this.$bvToast.toast('File size should not exceed 5MB', {
-            title: 'File Too Large',
-            variant: 'warning',
-            solid: true
-          });
-          event.target.value = '';
-          return;
-        }
-        this.product.image = file;
-      }
-    },
-
-    removeImage() {
-      this.product.image = null;
-      const fileInput = document.getElementById('file-upload');
-      if (fileInput) {
-        fileInput.value = '';
+      } finally {
+        this.isSubmitting = false;
       }
     },
 
@@ -754,31 +1083,13 @@ export default {
       };
       this.attributeValues = {};
       this.attributeOptions = {};
-    },
-
-    addShippingInfo() {
-      if (this.selectedShippingOption && !this.product.shippingInfo.includes(this.selectedShippingOption)) {
-        this.product.shippingInfo.push(this.selectedShippingOption);
-        this.selectedShippingOption = "";
-      }
-    },
-
-    removeShippingInfo(option) {
-      this.product.shippingInfo = this.product.shippingInfo.filter(o => o !== option);
-    },
-
-    updateAttributeValue(attributeId, value, selectedOption) {
-      if (this.attributeValues[attributeId]) {
-        this.$set(this.attributeValues, attributeId, {
-          ...this.attributeValues[attributeId],
-          value: value,
-          attributeValueId: selectedOption?.attributeValueId
-        });
-      }
+      this.selectedAttributes = {};
+      this.variantData = [];
     }
   }
 };
 </script>
+
 
 
 <style scoped>
