@@ -1,7 +1,8 @@
-import apiClient from '@/axios/axios';
+import publicApi from '@/axios/publicApi';
+
 const fetchShippingProviders = async (params = {}) => {
     try {
-        const response = await apiClient.get("/shipping-providers", { params });
+        const response = await publicApi.get("/shipping-providers", { params });
         return response.data;
     } catch (error) {
         if (error.response && error.response.data) {

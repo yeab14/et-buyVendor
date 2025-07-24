@@ -106,10 +106,23 @@
 
         <!-- Buttons -->
         <section class="flex flex-col md:flex-row gap-4 justify-center">
-          <button type="submit" :disabled="submitting"
-            class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-topbar-bg text-etbuy-white font-semibold shadow-etbuy-button transition-all duration-300 hover:bg-etbuy-red-dark hover:text-white hover:shadow-etbuy-light-hover disabled:opacity-60">
+          <button
+          type="submit"
+          :disabled="submitting"
+          class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-topbar-bg text-etbuy-white font-semibold shadow-etbuy-button transition-all duration-300 hover:bg-etbuy-red-dark hover:text-white hover:shadow-etbuy-light-hover disabled:opacity-60"
+        >
+          <template v-if="submitting">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            Processing...
+          </template>
+          <template v-else>
             <i class="fas fa-save"></i> Save Changes
-          </button>
+          </template>
+        </button>
+        
           <button type="button" @click="resetForm"
             class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full border border-etbuy-red-dark text-etbuy-red-dark bg-white font-semibold shadow-etbuy-button transition-all duration-300 hover:bg-etbuy-red-light hover:text-etbuy-black hover:shadow-etbuy-light-hover">
             <i class="fas fa-undo-alt"></i> Reset
